@@ -1,93 +1,73 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Shelby Network V8</title>
+<title>Ultimate Dashboard</title>
 
 <style>
 
 body{
 margin:0;
 font-family:Arial;
-text-align:center;
-color:#00ffff;
-background:url("https://images.unsplash.com/photo-1462331940025-496dfbfc7564");
+background:url("https://images.unsplash.com/photo-1503264116251-35a269479413") no-repeat center;
 background-size:cover;
+color:white;
+text-align:center;
 }
 
-h1{ text-shadow:0 0 20px cyan; }
+.container{
+background:rgba(0,0,0,0.6);
+padding:20px;
+}
 
 .avatar{
-width:110px;
-height:110px;
+width:120px;
+height:120px;
 border-radius:50%;
-border:3px solid cyan;
+border:4px solid cyan;
 box-shadow:0 0 20px cyan;
 }
 
-#earth{
-width:180px;
-animation:spin 25s linear infinite;
+.section{
+margin-top:30px;
+padding:20px;
+background:rgba(0,0,0,0.5);
+border-radius:10px;
 }
 
-@keyframes spin{
-from{transform:rotate(0)}
-to{transform:rotate(360deg)}
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+td,th{
+border:1px solid white;
+padding:8px;
 }
 
 button{
-margin:5px;
-padding:8px 14px;
-background:black;
-color:cyan;
-border:1px solid cyan;
-cursor:pointer;
-}
-
-button:hover{
-background:cyan;
-color:black;
-}
-
-#videoBox{
-display:none;
-margin-top:10px;
-}
-
-iframe{
-width:90%;
-height:380px;
-border:0;
+padding:10px 20px;
+font-size:16px;
 }
 
 #board{
 display:grid;
-grid-template-columns:repeat(12,34px);
+grid-template-columns:repeat(15,30px);
 justify-content:center;
-margin-top:20px;
 }
 
 .cell{
-width:34px;
-height:34px;
-border:1px solid cyan;
+width:30px;
+height:30px;
+border:1px solid white;
 font-size:20px;
+line-height:30px;
 cursor:pointer;
 }
 
-.cell:hover{
-background:#022;
-}
-
-.flower{
-position:fixed;
-top:-20px;
-font-size:20px;
-animation:fall linear infinite;
-}
-
-@keyframes fall{
-to{transform:translateY(110vh);}
+video{
+width:100%;
+max-width:600px;
 }
 
 </style>
@@ -95,62 +75,137 @@ to{transform:translateY(110vh);}
 
 <body>
 
-<h1>Shelby Network</h1>
+<div class="container">
 
-<img src="avatar.jpg" class="avatar">
+<h1>Ultimate Dashboard</h1>
 
-<br>
+<img class="avatar" src="https://i.imgur.com/8Km9tLL.jpg">
 
-<img id="earth"
-src="https://upload.wikimedia.org/wikipedia/commons/9/97/The_Earth_seen_from_Apollo_17.jpg">
+<div class="section">
 
-<div id="videoBox">
-<iframe id="player"></iframe>
+<h2>World Clock</h2>
+
+<div id="clock"></div>
+
 </div>
 
-<br>
+<div class="section">
 
-<button onclick="play('qDQi31U9qrE')">Song1</button>
-<button onclick="play('EMb_IyLEQtw')">Song2</button>
-<button onclick="play('pRpeEdMmmQ0')">Song3</button>
-<button onclick="play('q--M-6STHlI')">Song4</button>
-<button onclick="play('KbEM5vf0XGI')">Song5</button>
-<button onclick="stopSong()">Stop</button>
+<h2>Crypto Market</h2>
 
-<h3 id="clock"></h3>
+<table id="crypto">
 
-<h2>Gomoku AI</h2>
+<tr>
+<th>Coin</th>
+<th>Price</th>
+</tr>
+
+</table>
+
+</div>
+
+<div class="section">
+
+<h2>Football Center</h2>
+
+<p>
+<a href="https://www.livescore.com">Live Score</a><br>
+<a href="https://www.flashscore.com">Match Results</a>
+</p>
+
+</div>
+
+<div class="section">
+
+<h2>Music Video</h2>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/qDQi31U9qrE"></iframe>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/EMb_IyLEQtw"></iframe>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/pRpeEdMmmQ0"></iframe>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/q--M-6STHlI"></iframe>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/KbEM5vf0XGI"></iframe>
+
+</div>
+
+<div class="section">
+
+<h2>Game Caro</h2>
 
 <div id="board"></div>
 
 <button onclick="resetGame()">Reset</button>
 
-<br><br>
+</div>
 
-<a href="https://github.com/kimkha1985"><button>GitHub</button></a>
-<a href="https://x.com"><button>X</button></a>
+<div class="section">
+
+<h2>Links</h2>
+
+<a href="https://github.com">GitHub</a> |
+<a href="https://x.com">X</a>
+
+</div>
+
+</div>
 
 <script>
 
-function play(id){
-document.getElementById("videoBox").style.display="block"
-document.getElementById("player").src=
-"https://www.youtube.com/embed/"+id+"?autoplay=1"
+function updateClock(){
+
+let now=new Date()
+
+document.getElementById("clock").innerHTML=
+
+"Vietnam: "+now.toLocaleTimeString("en-US",{timeZone:"Asia/Ho_Chi_Minh"})+"<br>"+
+
+"New York: "+now.toLocaleTimeString("en-US",{timeZone:"America/New_York"})+"<br>"+
+
+"London: "+now.toLocaleTimeString("en-US",{timeZone:"Europe/London"})+"<br>"+
+
+"Madrid: "+now.toLocaleTimeString("en-US",{timeZone:"Europe/Madrid"})+"<br>"+
+
+"Paris: "+now.toLocaleTimeString("en-US",{timeZone:"Europe/Paris"})+"<br>"+
+
+"Berlin: "+now.toLocaleTimeString("en-US",{timeZone:"Europe/Berlin"})
+
 }
 
-function stopSong(){
-document.getElementById("player").src=""
+setInterval(updateClock,1000)
+
+updateClock()
+
+async function crypto(){
+
+let url="https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,binancecoin,ripple,okb,pi-network&vs_currencies=usd"
+
+let r=await fetch(url)
+
+let data=await r.json()
+
+let table=document.getElementById("crypto")
+
+table.innerHTML="<tr><th>Coin</th><th>Price</th></tr>"
+
+table.innerHTML+=`<tr><td>BTC</td><td>$${data.bitcoin.usd}</td></tr>`
+table.innerHTML+=`<tr><td>ETH</td><td>$${data.ethereum.usd}</td></tr>`
+table.innerHTML+=`<tr><td>SOL</td><td>$${data.solana.usd}</td></tr>`
+table.innerHTML+=`<tr><td>BNB</td><td>$${data.binancecoin.usd}</td></tr>`
+table.innerHTML+=`<tr><td>XRP</td><td>$${data.ripple.usd}</td></tr>`
+table.innerHTML+=`<tr><td>OKB</td><td>$${data.okb.usd}</td></tr>`
+table.innerHTML+=`<tr><td>PI</td><td>$${data["pi-network"]?.usd||"-"}</td></tr>`
+
 }
 
-function clock(){
-let n=new Date()
-document.getElementById("clock").innerText=
-"Vietnam Time: "+n.toLocaleTimeString("vi-VN")
-}
-setInterval(clock,1000)
+setInterval(crypto,60000)
 
+crypto()
+
+let size=15
 let board=document.getElementById("board")
-let size=12
 let grid=[]
 
 for(let i=0;i<size;i++){
@@ -159,178 +214,64 @@ for(let j=0;j<size;j++){
 
 grid[i][j]=""
 
-let c=document.createElement("div")
-c.className="cell"
+let cell=document.createElement("div")
+cell.className="cell"
+cell.onclick=()=>move(i,j)
 
-c.onclick=()=>move(i,j)
-
-board.appendChild(c)
+board.appendChild(cell)
 
 }
 }
 
 function getCell(x,y){
+
 return board.children[x*size+y]
+
 }
 
 function move(x,y){
 
-if(grid[x][y]!="") return
+if(grid[x][y]!="")return
 
 grid[x][y]="X"
+
 getCell(x,y).innerText="X"
 
-if(check(x,y,"X")){
-alert("Bạn thắng!")
-return
-}
-
-setTimeout(ai,200)
+ai()
 
 }
 
 function ai(){
 
-let best=-999
-let move=null
+let best=null
 
 for(let i=0;i<size;i++){
 for(let j=0;j<size;j++){
 
-if(grid[i][j]=="" && near(i,j)){
+if(grid[i][j]==""){
 
-grid[i][j]="O"
-
-let score=evaluate()
-
-grid[i][j]=""
-
-if(score>best){
-best=score
-move=[i,j]
-}
+best=[i,j]
 
 }
 
 }
 }
 
-if(move){
+if(best){
 
-grid[move[0]][move[1]]="O"
+grid[best[0]][best[1]]="O"
 
-getCell(move[0],move[1]).innerText="O"
-
-if(check(move[0],move[1],"O")){
-alert("AI thắng!")
-}
+getCell(best[0],best[1]].innerText="O"
 
 }
 
-}
-
-function near(x,y){
-
-for(let dx=-2;dx<=2;dx++){
-for(let dy=-2;dy<=2;dy++){
-
-let i=x+dx
-let j=y+dy
-
-if(i>=0 && j>=0 && i<size && j<size){
-
-if(grid[i][j]!="") return true
-
-}
-
-}
-}
-
-return false
-}
-
-function evaluate(){
-
-let score=0
-
-for(let i=0;i<size;i++){
-for(let j=0;j<size;j++){
-
-if(grid[i][j]=="O") score+=scorePoint(i,j,"O")
-if(grid[i][j]=="X") score-=scorePoint(i,j,"X")
-
-}
-}
-
-return score
-}
-
-function scorePoint(x,y,p){
-
-let total=0
-
-let dirs=[[1,0],[0,1],[1,1],[1,-1]]
-
-for(let d of dirs){
-
-let line=count(x,y,d[0],d[1],p)+count(x,y,-d[0],-d[1],p)
-
-if(line>=4) total+=10000
-else if(line==3) total+=1000
-else if(line==2) total+=100
-else if(line==1) total+=10
-
-}
-
-return total
-}
-
-function check(x,y,p){
-
-return(
-count(x,y,1,0,p)+count(x,y,-1,0,p)>4||
-count(x,y,0,1,p)+count(x,y,0,-1,p)>4||
-count(x,y,1,1,p)+count(x,y,-1,-1,p)>4||
-count(x,y,1,-1,p)+count(x,y,-1,1,p)>4
-)
-
-}
-
-function count(x,y,dx,dy,p){
-
-let c=0
-let i=x+dx
-let j=y+dy
-
-while(i>=0 && j>=0 && i<size && j<size && grid[i][j]==p){
-c++
-i+=dx
-j+=dy
-}
-
-return c
 }
 
 function resetGame(){
+
 location.reload()
-}
-
-function flower(){
-
-let f=document.createElement("div")
-f.className="flower"
-f.innerText="🌸"
-
-f.style.left=Math.random()*100+"vw"
-f.style.animationDuration=6+Math.random()*6+"s"
-
-document.body.appendChild(f)
-
-setTimeout(()=>f.remove(),12000)
 
 }
-
-setInterval(flower,800)
 
 </script>
 
