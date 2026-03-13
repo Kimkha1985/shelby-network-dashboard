@@ -1,281 +1,210 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
+
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Shelby Network | Lúa Về Nhà</title>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<title>Lúa Về Nhà</title>
 
 <style>
 
+*{
+box-sizing:border-box;
+}
+
 body{
 margin:0;
-font-family:Arial;
-background:#020617;
+font-family:Segoe UI;
 color:white;
-display:flex;
-height:100vh;
-overflow:hidden;
-}
-
-/* animated blockchain background */
-
-body::before{
-content:"";
-position:fixed;
-width:200%;
-height:200%;
-background-image:
-radial-gradient(circle,#00ff9c33 2px,transparent 2px);
-background-size:60px 60px;
-animation:blockmove 25s linear infinite;
-}
-
-@keyframes blockmove{
-0%{transform:translate(0,0)}
-100%{transform:translate(-300px,-300px)}
-}
-
-.sidebar{
-width:240px;
-background:#020617;
-padding:20px;
-box-shadow:0 0 30px #00ff9c66;
-z-index:1;
-}
-
-.sidebar h2{
-color:#00ff9c;
-letter-spacing:3px;
-}
-
-.sidebar button{
-width:100%;
-padding:12px;
-margin-top:10px;
-background:#111827;
-border:none;
-color:white;
-border-radius:8px;
-cursor:pointer;
-transition:0.3s;
-}
-
-.sidebar button:hover{
-background:#00ff9c;
-color:black;
-}
-
-.main{
-flex:1;
-padding:30px;
-overflow:auto;
-z-index:1;
-}
-
-.page{
-display:none;
-}
-
-.active{
-display:block;
-}
-
-/* dashboard cards */
-
-.cards{
-display:flex;
-gap:20px;
-flex-wrap:wrap;
-}
-
-.card{
-background:#111827;
-padding:20px;
-border-radius:14px;
-width:210px;
-box-shadow:0 0 25px #00ff9c44;
-}
-
-.card h3{
-margin:0;
-color:#9ca3af;
-}
-
-.card p{
-font-size:28px;
-color:#00ff9c;
-}
-
-/* world map */
-
-.world{
-background:#111827;
-padding:20px;
-border-radius:12px;
-margin-top:20px;
-box-shadow:0 0 20px #00ff9c22;
-}
-
-.node{
-margin:10px 0;
-font-size:16px;
-}
-
-/* profile */
-
-.profile{
-background:#111827;
-padding:35px;
-border-radius:12px;
-max-width:520px;
-box-shadow:0 0 25px #00ff9c44;
 text-align:center;
+
+background:url("background.jpg") center/cover no-repeat fixed;
+}
+
+.overlay{
+
+background:rgba(0,0,0,0.65);
+min-height:100vh;
+padding:30px;
+
 }
 
 .avatar{
-width:130px;
-height:130px;
+
+width:160px;
+height:160px;
 border-radius:50%;
-background:#00ff9c;
+border:4px solid white;
+object-fit:cover;
+box-shadow:0 0 20px rgba(255,255,255,0.6);
+
+}
+
+h1{
+
+margin-top:10px;
+font-size:35px;
+
+}
+
+.card{
+
+background:rgba(255,255,255,0.12);
+backdrop-filter:blur(12px);
+border-radius:16px;
+padding:20px;
+margin:25px auto;
+max-width:500px;
+box-shadow:0 10px 30px rgba(0,0,0,0.5);
+
+}
+
+button{
+
+padding:10px 20px;
+font-size:16px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+background:#ff9800;
+color:white;
+}
+
+button:hover{
+
+background:#ffb74d;
+
+}
+
+/* CLOCK */
+
+.clock{
+
+font-size:18px;
+margin:6px;
+
+}
+
+/* GAME */
+
+.board{
+
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
+max-width:300px;
+margin:auto;
+
+}
+
+.cell{
+
+height:90px;
+background:white;
+color:black;
+font-size:40px;
 display:flex;
 align-items:center;
 justify-content:center;
-font-size:42px;
-color:black;
-margin:auto;
-margin-bottom:15px;
-}
-
-.profile h2{
-color:#00ff9c;
-}
-
-canvas{
-background:#020617;
-padding:10px;
 border-radius:10px;
+cursor:pointer;
+
+}
+
+.cell:hover{
+
+background:#eee;
+
 }
 
 </style>
+
 </head>
 
 <body>
 
-<div class="sidebar">
+<div class="overlay">
 
-<h2>SHELBY</h2>
+<h1>Lúa Về Nhà</h1>
 
-<button onclick="openPage('dashboard')">Dashboard</button>
-<button onclick="openPage('nodes')">Global Network</button>
-<button onclick="openPage('analytics')">Analytics</button>
-<button onclick="openPage('profile')">Profile</button>
+<img src="avatar.jpg" class="avatar">
 
-</div>
-
-<div class="main">
-
-<!-- DASHBOARD -->
-
-<div id="dashboard" class="page active">
-
-<h1>Shelby Network Dashboard</h1>
-
-<div class="cards">
+<!-- MUSIC -->
 
 <div class="card">
-<h3>Total Nodes</h3>
-<p id="nodes">130</p>
+
+<h2>🎵 Âm Nhạc</h2>
+
+<button onclick="toggleMusic()" id="musicBtn">
+
+▶ Bật nhạc
+
+</button>
+
+<div id="player" style="display:none;margin-top:15px;">
+
+<iframe width="100%" height="300"
+src="https://www.youtube.com/embed/qDQi31U9qrE?loop=1&playlist=qDQi31U9qrE"
+allow="autoplay"
+allowfullscreen>
+</iframe>
+
 </div>
+
+</div>
+
+<!-- WEATHER -->
 
 <div class="card">
-<h3>Peers</h3>
-<p id="peers">640</p>
+
+<h2>🌦 Thời tiết TP.HCM</h2>
+
+<p id="weather">Đang tải...</p>
+
 </div>
+
+<!-- WORLD CLOCK -->
 
 <div class="card">
-<h3>TPS</h3>
-<p id="tps">1420</p>
+
+<h2>🌍 Giờ thế giới</h2>
+
+<div class="clock" id="vn"></div>
+<div class="clock" id="tokyo"></div>
+<div class="clock" id="london"></div>
+<div class="clock" id="ny"></div>
+
 </div>
+
+<!-- GAME -->
 
 <div class="card">
-<h3>Latency</h3>
-<p id="latency">17 ms</p>
-</div>
+
+<h2>🎮 Game Cờ Caro</h2>
+
+<div class="board">
+
+<div class="cell" onclick="move(this,0)"></div>
+<div class="cell" onclick="move(this,1)"></div>
+<div class="cell" onclick="move(this,2)"></div>
+
+<div class="cell" onclick="move(this,3)"></div>
+<div class="cell" onclick="move(this,4)"></div>
+<div class="cell" onclick="move(this,5)"></div>
+
+<div class="cell" onclick="move(this,6)"></div>
+<div class="cell" onclick="move(this,7)"></div>
+<div class="cell" onclick="move(this,8)"></div>
 
 </div>
 
-</div>
+<br>
 
-<!-- GLOBAL NETWORK -->
+<button onclick="resetGame()">Chơi lại</button>
 
-<div id="nodes" class="page">
-
-<h1>Global Blockchain Nodes</h1>
-
-<div class="world">
-
-<div class="node">🇻🇳 Ho Chi Minh — Active</div>
-<div class="node">🇸🇬 Singapore — Active</div>
-<div class="node">🇯🇵 Tokyo — Active</div>
-<div class="node">🇩🇪 Frankfurt — Active</div>
-<div class="node">🇬🇧 London — Active</div>
-<div class="node">🇺🇸 New York — Active</div>
-
-</div>
-
-</div>
-
-<!-- ANALYTICS -->
-
-<div id="analytics" class="page">
-
-<h1>Network Analytics</h1>
-
-<canvas id="chart"></canvas>
-
-</div>
-
-<!-- PROFILE -->
-
-<div id="profile" class="page">
-
-<h1>Profile</h1>
-
-<div class="profile">
-
-<div class="avatar">LVN</div>
-
-<h2>Lúa Về Nhà</h2>
-
-<p>Web3 Explorer • Blockchain Learner</p>
-
-<p>
-Exploring blockchain and building Web3 dashboards.
-</p>
-
-<p><b>Projects</b></p>
-
-<ul style="text-align:left">
-
-<li>Shelby Network Dashboard</li>
-<li>Web3 Experiments</li>
-<li>Blockchain Research</li>
-
-</ul>
-
-<p>
-
-<a href="https://github.com/Kimkha1985" style="color:#00ff9c">
-GitHub Profile
-</a>
-
-</p>
-
-</div>
+<p id="status"></p>
 
 </div>
 
@@ -283,51 +212,117 @@ GitHub Profile
 
 <script>
 
-function openPage(page){
+/* MUSIC */
 
-document.querySelectorAll(".page").forEach(p=>{
-p.classList.remove("active")
+function toggleMusic(){
+
+let player=document.getElementById("player")
+let btn=document.getElementById("musicBtn")
+
+if(player.style.display==="none"){
+
+player.style.display="block"
+btn.innerText="⏸ Tắt nhạc"
+
+}else{
+
+player.style.display="none"
+btn.innerText="▶ Bật nhạc"
+
+}
+
+}
+
+/* WEATHER */
+
+fetch("https://api.open-meteo.com/v1/forecast?latitude=10.82&longitude=106.63&current_weather=true")
+
+.then(res=>res.json())
+
+.then(data=>{
+
+document.getElementById("weather").innerText=
+"Nhiệt độ hiện tại: "+data.current_weather.temperature+"°C"
+
 })
 
-document.getElementById(page).classList.add("active")
+/* CLOCK */
+
+function updateTime(){
+
+const now=new Date()
+
+document.getElementById("vn").innerText=
+"Việt Nam: "+now.toLocaleTimeString("vi-VN",{timeZone:"Asia/Ho_Chi_Minh"})
+
+document.getElementById("tokyo").innerText=
+"Tokyo: "+now.toLocaleTimeString("ja-JP",{timeZone:"Asia/Tokyo"})
+
+document.getElementById("london").innerText=
+"London: "+now.toLocaleTimeString("en-GB",{timeZone:"Europe/London"})
+
+document.getElementById("ny").innerText=
+"New York: "+now.toLocaleTimeString("en-US",{timeZone:"America/New_York"})
 
 }
 
-function random(min,max){
-return Math.floor(Math.random()*(max-min)+min)
+setInterval(updateTime,1000)
+
+updateTime()
+
+/* GAME */
+
+let board=["","","","","","","","",""]
+let player="X"
+let gameOver=false
+
+function move(cell,index){
+
+if(board[index]!=="" || gameOver) return
+
+board[index]=player
+
+cell.innerText=player
+
+checkWin()
+
+player = player==="X" ? "O":"X"
+
 }
 
-setInterval(()=>{
+function checkWin(){
 
-document.getElementById("nodes").innerText=random(120,180)
-document.getElementById("peers").innerText=random(600,900)
-document.getElementById("tps").innerText=random(900,1800)
-document.getElementById("latency").innerText=random(10,35)+" ms"
+const win=[
+[0,1,2],[3,4,5],[6,7,8],
+[0,3,6],[1,4,7],[2,5,8],
+[0,4,8],[2,4,6]
+]
 
-},2000)
+for(let c of win){
 
-const ctx=document.getElementById("chart")
+if(board[c[0]] && board[c[0]]===board[c[1]] && board[c[1]]===board[c[2]]){
 
-new Chart(ctx,{
-type:"line",
-data:{
-labels:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
-datasets:[{
-label:"Network Traffic",
-data:[12,19,8,15,22,30,27],
-borderColor:"#00ff9c",
-backgroundColor:"#00ff9c33",
-tension:0.4
-}]
-},
-options:{
-plugins:{legend:{labels:{color:"white"}}},
-scales:{
-x:{ticks:{color:"white"}},
-y:{ticks:{color:"white"}}
+document.getElementById("status").innerText="Người thắng: "+board[c[0]]
+
+gameOver=true
+
 }
+
 }
-})
+
+}
+
+function resetGame(){
+
+board=["","","","","","","","",""]
+
+gameOver=false
+
+document.querySelectorAll(".cell").forEach(c=>c.innerText="")
+
+document.getElementById("status").innerText=""
+
+}
 
 </script>
 
