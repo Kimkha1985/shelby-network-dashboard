@@ -1,466 +1,417 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Lúa Về Nhà</title>
+<title>Shelby AI Dashboard</title>
 
 <style>
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
-
 body{
-
+margin:0;
+background:#000;
+color:#00ffff;
 font-family:Arial;
-
-background:url("https://images.unsplash.com/photo-1501785888041-af3ef285b470");
-
-background-size:cover;
-background-position:center;
-background-attachment:fixed;
-
-color:white;
 overflow:hidden;
-
 }
 
-/* nền sao */
+#container{
+display:flex;
+height:100vh;
+width:100vw;
+}
 
-canvas{
-position:fixed;
-top:0;
-left:0;
+#left{
+flex:1;
+position:relative;
+display:flex;
+align-items:center;
+justify-content:center;
+background:#000;
+}
+
+#right{
+width:420px;
+background:#050505;
+border-left:1px solid cyan;
+padding:20px;
+overflow:auto;
+}
+
+#earth{
+width:320px;
+animation:spin 30s linear infinite;
+}
+
+@keyframes spin{
+from{transform:rotate(0)}
+to{transform:rotate(360deg)}
+}
+
+#video{
+position:absolute;
 width:100%;
 height:100%;
-z-index:-1;
+display:none;
+top:0;
+left:0;
 }
 
-/* hoa rơi */
+#avatar{
+width:90px;
+height:90px;
+border-radius:50%;
+border:3px solid cyan;
+}
+
+button{
+background:cyan;
+border:none;
+padding:8px 14px;
+margin:4px;
+cursor:pointer;
+font-weight:bold;
+}
+
+canvas{
+background:#111;
+border:1px solid cyan;
+}
+
+a{
+color:cyan;
+display:block;
+margin-top:8px;
+text-decoration:none;
+}
+
+/* FLOWER */
 
 .flower{
 position:fixed;
-top:-10px;
-font-size:20px;
+top:-20px;
+font-size:18px;
 animation:fall linear infinite;
 }
 
 @keyframes fall{
-
-0%{transform:translateY(-10vh)}
-100%{transform:translateY(110vh)}
-
-}
-
-/* layout */
-
-.container{
-
-width:100vw;
-height:100vh;
-
-display:grid;
-
-grid-template-columns:1fr 1fr 1fr;
-gap:20px;
-
-padding:20px;
-
-}
-
-/* card */
-
-.card{
-
-background:rgba(0,0,0,0.5);
-backdrop-filter:blur(10px);
-
-border-radius:15px;
-padding:20px;
-
-text-align:center;
-
-}
-
-/* avatar */
-
-.avatar{
-
-width:130px;
-height:130px;
-
-border-radius:50%;
-
-border:3px solid white;
-
-box-shadow:0 0 20px white;
-
-}
-
-/* globe */
-
-.globe{
-
-font-size:80px;
-animation:spin 12s linear infinite;
-
-}
-
-@keyframes spin{
-
-0%{transform:rotate(0)}
-100%{transform:rotate(360deg)}
-
-}
-
-/* button */
-
-button{
-
-padding:10px 15px;
-
-border:none;
-
-border-radius:10px;
-
-background:orange;
-
-color:white;
-
-font-weight:bold;
-
-cursor:pointer;
-
-margin:5px;
-
-}
-
-/* caro */
-
-#board{
-
-display:grid;
-
-grid-template-columns:repeat(15,35px);
-gap:4px;
-
-justify-content:center;
-
-margin-top:10px;
-
-}
-
-.cell{
-
-width:35px;
-height:35px;
-
-background:white;
-color:black;
-
-display:flex;
-align-items:center;
-justify-content:center;
-
-font-size:18px;
-
-cursor:pointer;
-
-border-radius:5px;
-
+to{transform:translateY(110vh);}
 }
 
 </style>
-
 </head>
 
 <body>
 
-<canvas id="stars"></canvas>
+<div id="container">
 
-<div class="container">
+<div id="left">
 
-<div class="card">
+<img id="earth"
+src="https://upload.wikimedia.org/wikipedia/commons/9/97/The_Earth_seen_from_Apollo_17.jpg">
 
-<h2>🌾 Lúa Về Nhà 👑</h2>
-
-<br>
-
-<img class="avatar"
-src="https://i.imgur.com/1X6bR9K.png">
-
-</div>
-
-<div class="card">
-
-<h2>🎵 Music</h2>
-
-<button onclick="play(0)">Song 1</button>
-<button onclick="play(1)">Song 2</button>
-<button onclick="play(2)">Song 3</button>
-<button onclick="stop()">Stop</button>
-
-<br><br>
-
-<iframe id="player"
-width="100%"
-height="200"
-src=""
-allow="autoplay">
-</iframe>
+<iframe id="video"
+src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+frameborder="0"
+allowfullscreen></iframe>
 
 </div>
 
-<div class="card">
+<div id="right">
 
-<h2>🌍 Earth</h2>
+<h2>Shelby Network</h2>
 
-<div class="globe">🌎</div>
+<img id="avatar"
+src="https://i.imgur.com/4Z7b7YQ.png">
 
-</div>
+<p>Admin Dashboard</p>
 
-<div class="card">
+<button onclick="playMusic()">🎵 Mở nhạc</button>
+<button onclick="stopMusic()">❌ Tắt video</button>
+<button onclick="resetGame()">🔄 Reset game</button>
 
-<h2>🌡 Weather</h2>
+<h3>Giờ thế giới</h3>
 
-<div>TP.HCM ~ 30°C</div>
+<div id="timeVN"></div>
+<div id="timeUS"></div>
+<div id="timeJP"></div>
+<div id="timeUK"></div>
 
-</div>
+<h3>Nhiệt độ</h3>
 
-<div class="card">
+<div id="tempVN">Loading...</div>
+<div id="tempUS"></div>
+<div id="tempJP"></div>
 
-<h2>🌍 World Clock</h2>
+<h3>Game Caro AI</h3>
 
-<div id="clock"></div>
+<canvas id="board" width="400" height="400"></canvas>
 
-</div>
+<h3>Links</h3>
 
-<div class="card">
-
-<h2>🎮 Caro AI</h2>
-
-<div id="board"></div>
-
-<button onclick="resetGame()">Reset</button>
-
-</div>
-
-<div class="card">
-
-<h2>🔗 Links</h2>
-
-<a href="https://github.com/Kimkha1985" target="_blank">
-<button>GitHub</button>
-</a>
-
-<a href="https://x.com/ChauKimKha" target="_blank">
-<button>X</button>
-</a>
+<a href="https://github.com/kimkha1985" target="_blank">GitHub</a>
+<a href="https://x.com/" target="_blank">X</a>
 
 </div>
-
 </div>
 
 <script>
 
-/* hoa rơi */
+/* CLOCK */
 
-for(let i=0;i<30;i++){
+function updateClock(){
 
-let flower=document.createElement("div")
+let vn=new Date().toLocaleTimeString("vi-VN",{timeZone:"Asia/Ho_Chi_Minh"});
+let us=new Date().toLocaleTimeString("en-US",{timeZone:"America/New_York"});
+let jp=new Date().toLocaleTimeString("ja-JP",{timeZone:"Asia/Tokyo"});
+let uk=new Date().toLocaleTimeString("en-GB",{timeZone:"Europe/London"});
 
-flower.className="flower"
-
-flower.innerHTML="🌸"
-
-flower.style.left=Math.random()*100+"vw"
-
-flower.style.animationDuration=5+Math.random()*5+"s"
-
-document.body.appendChild(flower)
+timeVN.innerText="VN: "+vn;
+timeUS.innerText="New York: "+us;
+timeJP.innerText="Tokyo: "+jp;
+timeUK.innerText="London: "+uk;
 
 }
 
-/* music */
+setInterval(updateClock,1000);
+updateClock();
 
-const songs=[
+/* WEATHER */
 
-"https://www.youtube.com/embed/qDQi31U9qrE",
+async function weather(){
 
-"https://www.youtube.com/embed/EMb_IyLEQtw",
+let vn=await fetch("https://api.open-meteo.com/v1/forecast?latitude=10.82&longitude=106.63&current_weather=true").then(r=>r.json());
+let us=await fetch("https://api.open-meteo.com/v1/forecast?latitude=40.71&longitude=-74&current_weather=true").then(r=>r.json());
+let jp=await fetch("https://api.open-meteo.com/v1/forecast?latitude=35.68&longitude=139.69&current_weather=true").then(r=>r.json());
 
-"https://www.youtube.com/embed/pRpeEdMmmQ0"
-
-]
-
-function play(i){
-
-document.getElementById("player").src=songs[i]+"?autoplay=1"
-
-}
-
-function stop(){
-
-document.getElementById("player").src=""
+tempVN.innerText="VN: "+vn.current_weather.temperature+"°C";
+tempUS.innerText="New York: "+us.current_weather.temperature+"°C";
+tempJP.innerText="Tokyo: "+jp.current_weather.temperature+"°C";
 
 }
 
-/* clock */
+weather();
 
-function clock(){
+/* FLOWERS */
 
-let now=new Date()
+function flower(){
 
-document.getElementById("clock").innerHTML=
+let f=document.createElement("div");
+f.className="flower";
+f.innerHTML="🌸";
 
-"🇻🇳 VN: "+now.toLocaleTimeString("vi-VN")+"<br>"+
+f.style.left=Math.random()*100+"vw";
+f.style.animationDuration=6+Math.random()*8+"s";
 
-"🇯🇵 Tokyo: "+now.toLocaleTimeString("en-US",{timeZone:"Asia/Tokyo"})+"<br>"+
+document.body.appendChild(f);
 
-"🇺🇸 NewYork: "+now.toLocaleTimeString("en-US",{timeZone:"America/New_York"})+"<br>"+
-
-"🇬🇧 London: "+now.toLocaleTimeString("en-GB",{timeZone:"Europe/London"})
+setTimeout(()=>f.remove(),15000);
 
 }
 
-setInterval(clock,1000)
+setInterval(flower,700);
 
-clock()
+/* VIDEO */
 
-/* CARO */
+function playMusic(){
 
-const size=15
+earth.style.display="none";
+video.style.display="block";
 
-const board=document.getElementById("board")
+}
 
-let grid=[]
+function stopMusic(){
+
+earth.style.display="block";
+video.style.display="none";
+
+}
+
+/* CARO GAME */
+
+const canvas=document.getElementById("board");
+const ctx=canvas.getContext("2d");
+
+const size=15;
+let board=[];
+
+function initBoard(){
+
+board=[];
 
 for(let i=0;i<size;i++){
-
-grid[i]=[]
+board[i]=[];
 
 for(let j=0;j<size;j++){
-
-grid[i][j]=""
-
-let cell=document.createElement("div")
-
-cell.className="cell"
-
-cell.onclick=()=>move(i,j)
-
-board.appendChild(cell)
-
+board[i][j]=0;
 }
 
 }
 
-function getCell(x,y){
-
-return board.children[x*size+y]
+draw();
 
 }
 
-function move(x,y){
+function draw(){
 
-if(grid[x][y]!="") return
+ctx.clearRect(0,0,400,400);
 
-grid[x][y]="X"
+let cell=400/size;
 
-getCell(x,y).innerText="X"
-
-if(check(x,y,"X")){
-
-alert("Bạn thắng!")
-
-return
-
-}
-
-ai()
-
-}
-
-function ai(){
-
-let empty=[]
+ctx.strokeStyle="cyan";
 
 for(let i=0;i<size;i++){
-
 for(let j=0;j<size;j++){
 
-if(grid[i][j]==""){
+ctx.strokeRect(i*cell,j*cell,cell,cell);
 
-empty.push([i,j])
+if(board[i][j]==1){
 
+ctx.fillStyle="cyan";
+ctx.beginPath();
+ctx.arc(i*cell+cell/2,j*cell+cell/2,cell/3,0,Math.PI*2);
+ctx.fill();
+
+}
+
+if(board[i][j]==2){
+
+ctx.strokeStyle="red";
+ctx.beginPath();
+ctx.moveTo(i*cell+5,j*cell+5);
+ctx.lineTo(i*cell+cell-5,j*cell+cell-5);
+ctx.moveTo(i*cell+cell-5,j*cell+5);
+ctx.lineTo(i*cell+5,j*cell+cell-5);
+ctx.stroke();
+
+}
+
+}
+}
+
+}
+
+/* PLAYER MOVE */
+
+canvas.addEventListener("click",function(e){
+
+let rect=canvas.getBoundingClientRect();
+
+let x=e.clientX-rect.left;
+let y=e.clientY-rect.top;
+
+let cell=400/size;
+
+let i=Math.floor(x/cell);
+let j=Math.floor(y/cell);
+
+if(board[i][j]==0){
+
+board[i][j]=1;
+
+aiMove();
+
+draw();
+
+}
+
+});
+
+/* AI HARD */
+
+function aiMove(){
+
+let bestScore=-9999;
+let move=null;
+
+for(let i=0;i<size;i++){
+for(let j=0;j<size;j++){
+
+if(board[i][j]==0){
+
+board[i][j]=2;
+
+let score=evaluate();
+
+board[i][j]=0;
+
+if(score>bestScore){
+bestScore=score;
+move={i,j};
+}
+
+}
+
+}
+}
+
+if(move){
+board[move.i][move.j]=2;
+}
+
+}
+
+function evaluate(){
+
+let score=0;
+
+for(let i=0;i<size;i++){
+for(let j=0;j<size;j++){
+
+if(board[i][j]==2) score+=check(i,j,2);
+if(board[i][j]==1) score-=check(i,j,1);
+
+}
+}
+
+return score;
+
+}
+
+function check(x,y,player){
+
+let total=0;
+
+const dir=[
+[1,0],
+[0,1],
+[1,1],
+[1,-1]
+];
+
+for(let d of dir){
+
+let count=0;
+
+for(let k=1;k<5;k++){
+
+let nx=x+d[0]*k;
+let ny=y+d[1]*k;
+
+if(nx>=0 && ny>=0 && nx<size && ny<size){
+
+if(board[nx][ny]==player){
+count++;
 }
 
 }
 
 }
 
-if(empty.length==0)return
-
-let m=empty[Math.floor(Math.random()*empty.length)]
-
-grid[m[0]][m[1]]="O"
-
-getCell(m[0],m[1]).innerText="O"
-
-if(check(m[0],m[1],"O")){
-
-alert("AI thắng!")
+total+=count*count;
 
 }
 
-}
-
-function check(x,y,p){
-
-return(
-
-count(x,y,1,0,p)+count(x,y,-1,0,p)>4||
-
-count(x,y,0,1,p)+count(x,y,0,-1,p)>4||
-
-count(x,y,1,1,p)+count(x,y,-1,-1,p)>4||
-
-count(x,y,1,-1,p)+count(x,y,-1,1,p)>4
-
-)
-
-}
-
-function count(x,y,dx,dy,p){
-
-let c=0
-
-let i=x+dx
-let j=y+dy
-
-while(i>=0&&j>=0&&i<size&&j<size&&grid[i][j]==p){
-
-c++
-
-i+=dx
-j+=dy
-
-}
-
-return c
+return total;
 
 }
 
 function resetGame(){
-
-location.reload()
-
+initBoard();
 }
+
+initBoard();
 
 </script>
 
