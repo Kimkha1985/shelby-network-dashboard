@@ -1,122 +1,119 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Shelby ULTRA AI Dashboard</title>
+<title>Shelby Network V6</title>
 
 <style>
 
 body{
 margin:0;
-background:#000;
-color:#00ffff;
 font-family:Arial;
-overflow:hidden;
+color:#0ff;
+text-align:center;
+background:black;
+overflow-x:hidden;
 }
 
-/* MATRIX BACKGROUND */
+/* galaxy background */
 
-canvas#matrix{
+body::before{
+content:"";
 position:fixed;
-top:0;
-left:0;
+width:200%;
+height:200%;
+background:url("https://upload.wikimedia.org/wikipedia/commons/5/5f/Hubble_ultra_deep_field.jpg");
+background-size:cover;
+animation:space 120s linear infinite;
 z-index:-1;
 }
 
-/* LAYOUT */
-
-#container{
-display:flex;
-width:100vw;
-height:100vh;
+@keyframes space{
+from{transform:translate(0,0)}
+to{transform:translate(-1000px,-500px)}
 }
 
-#left{
-flex:1;
+header{
 display:flex;
+justify-content:space-between;
 align-items:center;
-justify-content:center;
-position:relative;
+padding:10px;
+background:rgba(0,0,0,0.7);
 }
 
-#right{
-width:420px;
-background:rgba(0,0,0,0.8);
-border-left:1px solid cyan;
-padding:20px;
-overflow:auto;
+.logo{
+height:45px;
 }
 
-#earth{
-width:350px;
-animation:spin 25s linear infinite;
-filter:drop-shadow(0 0 20px cyan);
-}
-
-@keyframes spin{
-from{transform:rotate(0)}
-to{transform:rotate(360deg)}
-}
-
-/* VIDEO */
-
-#video{
-position:absolute;
-top:0;
-left:0;
-width:100%;
-height:100%;
-display:none;
-}
-
-/* AVATAR */
-
-#avatar{
-width:100px;
-height:100px;
+.avatar{
+width:50px;
+height:50px;
 border-radius:50%;
-border:3px solid cyan;
-box-shadow:0 0 15px cyan;
-}
-
-/* BUTTON */
-
-button{
-background:cyan;
-border:none;
-padding:8px 14px;
-margin:4px;
-cursor:pointer;
-font-weight:bold;
-}
-
-/* BOARD */
-
-canvas#board{
-background:#111;
-border:1px solid cyan;
-}
-
-/* FLOWER */
-
-.flower{
-position:fixed;
-top:-20px;
-font-size:18px;
-animation:fall linear infinite;
-}
-
-@keyframes fall{
-to{transform:translateY(110vh);}
 }
 
 a{
-color:cyan;
+color:#0ff;
+margin:10px;
 text-decoration:none;
-display:block;
-margin-top:8px;
+}
+
+#clock{
+font-size:18px;
+margin-top:10px;
+}
+
+#weather{
+margin:10px;
+}
+
+#earth{
+width:260px;
+animation:spin 25s linear infinite;
+}
+
+@keyframes spin{
+from{transform:rotate(0deg)}
+to{transform:rotate(360deg)}
+}
+
+#video{
+display:none;
+width:100%;
+height:320px;
+}
+
+button{
+margin:5px;
+padding:8px 14px;
+background:black;
+border:1px solid #0ff;
+color:#0ff;
+cursor:pointer;
+}
+
+button:hover{
+background:#0ff;
+color:black;
+}
+
+/* caro */
+
+#board{
+display:grid;
+grid-template-columns:repeat(15,25px);
+justify-content:center;
+margin-top:20px;
+}
+
+.cell{
+width:25px;
+height:25px;
+border:1px solid #0ff;
+line-height:25px;
+font-size:18px;
 }
 
 </style>
@@ -124,348 +121,287 @@ margin-top:8px;
 
 <body>
 
-<canvas id="matrix"></canvas>
+<header>
 
-<div id="container">
+<img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg">
 
-<div id="left">
-
-<img id="earth"
-src="https://upload.wikimedia.org/wikipedia/commons/9/97/The_Earth_seen_from_Apollo_17.jpg">
-
-<iframe id="video"
-src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-frameborder="0"
-allowfullscreen></iframe>
-
+<div>
+<a href="https://github.com" target="_blank">GitHub</a>
+<a href="https://x.com" target="_blank">X</a>
 </div>
 
-<div id="right">
+<img class="avatar" src="https://i.imgur.com/4AiXzf8.jpeg">
 
-<h2>Shelby Network</h2>
+</header>
 
-<img id="avatar"
-src="https://i.imgur.com/4Z7b7YQ.png">
+<h2>🚀 Shelby Network Dashboard V6</h2>
 
-<p>AI Dashboard</p>
+<div id="clock"></div>
 
-<button onclick="playMusic()">🎵 Mở nhạc</button>
-<button onclick="stopMusic()">❌ Tắt video</button>
-<button onclick="resetGame()">🔄 Reset game</button>
+<div id="weather"></div>
 
-<h3>Giờ thế giới</h3>
+<br>
 
-<div id="timeVN"></div>
-<div id="timeUS"></div>
-<div id="timeJP"></div>
-<div id="timeUK"></div>
+<img id="earth" src="https://upload.wikimedia.org/wikipedia/commons/9/97/The_Earth_seen_from_Apollo_17.jpg">
 
-<h3>Nhiệt độ</h3>
+<iframe id="video" frameborder="0" allowfullscreen></iframe>
 
-<div id="tempVN"></div>
-<div id="tempUS"></div>
-<div id="tempJP"></div>
+<br>
 
-<h3>Game Caro AI</h3>
+<button onclick="song1()">Song 1</button>
+<button onclick="song2()">Song 2</button>
+<button onclick="song3()">Song 3</button>
+<button onclick="stopMusic()">Stop</button>
 
-<canvas id="board" width="400" height="400"></canvas>
+<h3>🎮 Game Caro</h3>
 
-<h3>Links</h3>
+<div id="board"></div>
 
-<a href="https://github.com/kimkha1985" target="_blank">
-GitHub
-</a>
-
-<a href="https://x.com/" target="_blank">
-X
-</a>
-
-</div>
-</div>
+<button onclick="resetGame()">Reset Game</button>
 
 <script>
 
-/* MATRIX EFFECT */
+/* clock */
 
-const matrix=document.getElementById("matrix");
-const ctxM=matrix.getContext("2d");
+function clock(){
 
-matrix.width=window.innerWidth;
-matrix.height=window.innerHeight;
+let now=new Date()
 
-const letters="01";
-const fontSize=14;
-const columns=matrix.width/fontSize;
+document.getElementById("clock").innerHTML=
 
-const drops=[];
-
-for(let x=0;x<columns;x++) drops[x]=1;
-
-function drawMatrix(){
-
-ctxM.fillStyle="rgba(0,0,0,0.05)";
-ctxM.fillRect(0,0,matrix.width,matrix.height);
-
-ctxM.fillStyle="#0f0";
-ctxM.font=fontSize+"px monospace";
-
-for(let i=0;i<drops.length;i++){
-
-const text=letters[Math.floor(Math.random()*letters.length)];
-
-ctxM.fillText(text,i*fontSize,drops[i]*fontSize);
-
-if(drops[i]*fontSize>matrix.height && Math.random()>0.975)
-drops[i]=0;
-
-drops[i]++;
+"🇻🇳 VN "+now.toLocaleTimeString("vi-VN",{timeZone:"Asia/Ho_Chi_Minh"})+"<br>"+
+"🇯🇵 Tokyo "+now.toLocaleTimeString("en-US",{timeZone:"Asia/Tokyo"})+"<br>"+
+"🇺🇸 New York "+now.toLocaleTimeString("en-US",{timeZone:"America/New_York"})+"<br>"+
+"🇬🇧 London "+now.toLocaleTimeString("en-US",{timeZone:"Europe/London"})
 
 }
 
-}
+setInterval(clock,1000)
 
-setInterval(drawMatrix,50);
+/* weather */
 
-/* CLOCK */
+fetch("https://api.open-meteo.com/v1/forecast?latitude=10.82&longitude=106.63&current_weather=true")
+.then(r=>r.json())
+.then(d=>{
+document.getElementById("weather").innerHTML=
+"🌡 Vietnam Temperature: "+d.current_weather.temperature+"°C"
+})
 
-function updateClock(){
+/* music */
 
-timeVN.innerText="VN: "+new Date().toLocaleTimeString("vi-VN",{timeZone:"Asia/Ho_Chi_Minh"});
-timeUS.innerText="New York: "+new Date().toLocaleTimeString("en-US",{timeZone:"America/New_York"});
-timeJP.innerText="Tokyo: "+new Date().toLocaleTimeString("ja-JP",{timeZone:"Asia/Tokyo"});
-timeUK.innerText="London: "+new Date().toLocaleTimeString("en-GB",{timeZone:"Europe/London"});
+let video=document.getElementById("video")
+let earth=document.getElementById("earth")
 
-}
+function song1(){
 
-setInterval(updateClock,1000);
-updateClock();
-
-/* WEATHER */
-
-async function weather(){
-
-let vn=await fetch("https://api.open-meteo.com/v1/forecast?latitude=10.82&longitude=106.63&current_weather=true").then(r=>r.json());
-
-tempVN.innerText="VN: "+vn.current_weather.temperature+"°C";
+video.src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+earth.style.display="none"
+video.style.display="block"
 
 }
 
-weather();
+function song2(){
 
-/* FLOWER */
-
-function flower(){
-
-let f=document.createElement("div");
-f.className="flower";
-f.innerHTML="🌸";
-
-f.style.left=Math.random()*100+"vw";
-f.style.animationDuration=6+Math.random()*10+"s";
-
-document.body.appendChild(f);
-
-setTimeout(()=>f.remove(),15000);
+video.src="https://www.youtube.com/embed/3JZ4pnNtyxQ"
+earth.style.display="none"
+video.style.display="block"
 
 }
 
-setInterval(flower,800);
+function song3(){
 
-/* VIDEO */
+video.src="https://www.youtube.com/embed/fLexgOxsZu0"
+earth.style.display="none"
+video.style.display="block"
 
-function playMusic(){
-earth.style.display="none";
-video.style.display="block";
 }
 
 function stopMusic(){
-earth.style.display="block";
-video.style.display="none";
+
+video.src=""
+video.style.display="none"
+earth.style.display="block"
+
 }
 
-/* CARO GAME AI */
+/* flower effect */
 
-const canvas=document.getElementById("board");
-const ctx=canvas.getContext("2d");
+function flowers(){
 
-const size=15;
-let board=[];
+const f=document.createElement("div")
 
-function initBoard(){
+f.innerHTML="🌸"
 
-board=[];
+f.style.position="fixed"
+f.style.top="-10px"
+f.style.left=Math.random()*window.innerWidth+"px"
+f.style.fontSize="20px"
+
+document.body.appendChild(f)
+
+let fall=setInterval(()=>{
+
+f.style.top=(f.offsetTop+1)+"px"
+
+if(f.offsetTop>window.innerHeight){
+
+clearInterval(fall)
+f.remove()
+
+}
+
+},20)
+
+}
+
+setInterval(flowers,900)
+
+/* caro */
+
+const board=document.getElementById("board")
+const size=15
+let grid=[]
 
 for(let i=0;i<size;i++){
-board[i]=[];
+
+grid[i]=[]
 
 for(let j=0;j<size;j++){
-board[i][j]=0;
-}
 
-}
+grid[i][j]=""
 
-draw();
+let cell=document.createElement("div")
+cell.className="cell"
+cell.onclick=()=>move(i,j)
 
-}
-
-function draw(){
-
-ctx.clearRect(0,0,400,400);
-
-let cell=400/size;
-
-ctx.strokeStyle="cyan";
-
-for(let i=0;i<size;i++){
-for(let j=0;j<size;j++){
-
-ctx.strokeRect(i*cell,j*cell,cell,cell);
-
-if(board[i][j]==1){
-
-ctx.fillStyle="cyan";
-ctx.beginPath();
-ctx.arc(i*cell+cell/2,j*cell+cell/2,cell/3,0,Math.PI*2);
-ctx.fill();
-
-}
-
-if(board[i][j]==2){
-
-ctx.strokeStyle="red";
-ctx.beginPath();
-
-ctx.moveTo(i*cell+5,j*cell+5);
-ctx.lineTo(i*cell+cell-5,j*cell+cell-5);
-
-ctx.moveTo(i*cell+cell-5,j*cell+5);
-ctx.lineTo(i*cell+5,j*cell+cell-5);
-
-ctx.stroke();
+board.appendChild(cell)
 
 }
 
 }
-}
+
+function getCell(x,y){
+
+return board.children[x*size+y]
 
 }
 
-canvas.addEventListener("click",function(e){
+function move(x,y){
 
-let rect=canvas.getBoundingClientRect();
+if(grid[x][y]!="")return
 
-let x=e.clientX-rect.left;
-let y=e.clientY-rect.top;
+grid[x][y]="X"
+getCell(x,y).innerText="X"
 
-let cell=400/size;
-
-let i=Math.floor(x/cell);
-let j=Math.floor(y/cell);
-
-if(board[i][j]==0){
-
-board[i][j]=1;
-
-aiMove();
-
-draw();
-
+if(checkWin(x,y,"X")){
+alert("🏆 Bạn thắng!")
+return
 }
 
-});
+setTimeout(aiMove,200)
+
+}
 
 function aiMove(){
 
-let bestScore=-9999;
-let move=null;
+let bestScore=-9999
+let move=null
 
 for(let i=0;i<size;i++){
+
 for(let j=0;j<size;j++){
 
-if(board[i][j]==0){
+if(grid[i][j]==""){
 
-board[i][j]=2;
+grid[i][j]="O"
 
-let score=evaluate();
+let score=evaluate()
 
-board[i][j]=0;
+grid[i][j]=""
 
 if(score>bestScore){
-bestScore=score;
-move={i,j};
-}
+
+bestScore=score
+move=[i,j]
 
 }
 
 }
+
+}
+
 }
 
 if(move){
-board[move.i][move.j]=2;
+
+grid[move[0]][move[1]]="O"
+getCell(move[0],move[1]).innerText="O"
+
+if(checkWin(move[0],move[1],"O")){
+
+alert("🤖 AI thắng!")
+
+}
+
 }
 
 }
 
 function evaluate(){
 
-let score=0;
+let score=0
 
 for(let i=0;i<size;i++){
+
 for(let j=0;j<size;j++){
 
-if(board[i][j]==2) score+=check(i,j,2);
-if(board[i][j]==1) score-=check(i,j,1);
-
-}
-}
-
-return score;
-
-}
-
-function check(x,y,player){
-
-let total=0;
-
-const dir=[
-[1,0],
-[0,1],
-[1,1],
-[1,-1]
-];
-
-for(let d of dir){
-
-let count=0;
-
-for(let k=1;k<5;k++){
-
-let nx=x+d[0]*k;
-let ny=y+d[1]*k;
-
-if(nx>=0 && ny>=0 && nx<size && ny<size){
-
-if(board[nx][ny]==player){
-count++;
-}
+if(grid[i][j]=="O")score+=1
+if(grid[i][j]=="X")score-=1
 
 }
 
 }
 
-total+=count*count;
+return score
 
 }
 
-return total;
+function checkWin(x,y,p){
+
+return(
+
+count(x,y,1,0,p)+count(x,y,-1,0,p)>=4||
+count(x,y,0,1,p)+count(x,y,0,-1,p)>=4||
+count(x,y,1,1,p)+count(x,y,-1,-1,p)>=4||
+count(x,y,1,-1,p)+count(x,y,-1,1,p)>=4
+
+)
+
+}
+
+function count(x,y,dx,dy,p){
+
+let c=0
+let i=x+dx
+let j=y+dy
+
+while(i>=0&&j>=0&&i<size&&j<size&&grid[i][j]==p){
+
+c++
+i+=dx
+j+=dy
+
+}
+
+return c
 
 }
 
 function resetGame(){
-initBoard();
-}
 
-initBoard();
+location.reload()
+
+}
 
 </script>
 
