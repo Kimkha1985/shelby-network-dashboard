@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Shelby Network V7 ULTRA</title>
+<title>Shelby Network V8</title>
 
 <style>
 
@@ -11,78 +11,65 @@ margin:0;
 font-family:Arial;
 text-align:center;
 color:#00ffff;
-background:
-radial-gradient(circle at 20% 20%,#001,#000 60%),
-url("https://images.unsplash.com/photo-1462331940025-496dfbfc7564");
+background:url("https://images.unsplash.com/photo-1462331940025-496dfbfc7564");
 background-size:cover;
-overflow-x:hidden;
 }
 
-h1{
-text-shadow:0 0 20px cyan;
-}
+h1{ text-shadow:0 0 20px cyan; }
 
 .avatar{
-width:120px;
-height:120px;
+width:110px;
+height:110px;
 border-radius:50%;
 border:3px solid cyan;
-box-shadow:0 0 30px cyan;
+box-shadow:0 0 20px cyan;
 }
 
 #earth{
-width:200px;
-margin-top:10px;
+width:180px;
 animation:spin 25s linear infinite;
-filter:drop-shadow(0 0 20px cyan);
 }
 
 @keyframes spin{
-from{transform:rotate(0deg)}
+from{transform:rotate(0)}
 to{transform:rotate(360deg)}
 }
 
 button{
-margin:6px;
+margin:5px;
 padding:8px 14px;
-background:#000;
-color:#0ff;
-border:1px solid #0ff;
+background:black;
+color:cyan;
+border:1px solid cyan;
 cursor:pointer;
-font-weight:bold;
 }
 
 button:hover{
-background:#0ff;
-color:#000;
+background:cyan;
+color:black;
 }
 
 #videoBox{
 display:none;
-margin-top:15px;
+margin-top:10px;
 }
 
 iframe{
 width:90%;
-height:420px;
-border:none;
-}
-
-#clockBox{
-margin-top:10px;
-font-size:18px;
+height:380px;
+border:0;
 }
 
 #board{
 display:grid;
-grid-template-columns:repeat(15,32px);
+grid-template-columns:repeat(12,34px);
 justify-content:center;
 margin-top:20px;
 }
 
 .cell{
-width:32px;
-height:32px;
+width:34px;
+height:34px;
 border:1px solid cyan;
 font-size:20px;
 cursor:pointer;
@@ -90,11 +77,6 @@ cursor:pointer;
 
 .cell:hover{
 background:#022;
-}
-
-#footer{
-margin-top:40px;
-padding-bottom:30px;
 }
 
 .flower{
@@ -105,9 +87,7 @@ animation:fall linear infinite;
 }
 
 @keyframes fall{
-to{
-transform:translateY(110vh);
-}
+to{transform:translateY(110vh);}
 }
 
 </style>
@@ -115,7 +95,7 @@ transform:translateY(110vh);
 
 <body>
 
-<h1>Shelby Network Dashboard</h1>
+<h1>Shelby Network</h1>
 
 <img src="avatar.jpg" class="avatar">
 
@@ -125,45 +105,34 @@ transform:translateY(110vh);
 src="https://upload.wikimedia.org/wikipedia/commons/9/97/The_Earth_seen_from_Apollo_17.jpg">
 
 <div id="videoBox">
-<iframe id="player" allow="autoplay"></iframe>
+<iframe id="player"></iframe>
 </div>
 
 <br>
 
-<button onclick="song('qDQi31U9qrE')">Song 1</button>
-<button onclick="song('EMb_IyLEQtw')">Song 2</button>
-<button onclick="song('pRpeEdMmmQ0')">Song 3</button>
-<button onclick="song('q--M-6STHlI')">Song 4</button>
-<button onclick="song('KbEM5vf0XGI')">Song 5</button>
+<button onclick="play('qDQi31U9qrE')">Song1</button>
+<button onclick="play('EMb_IyLEQtw')">Song2</button>
+<button onclick="play('pRpeEdMmmQ0')">Song3</button>
+<button onclick="play('q--M-6STHlI')">Song4</button>
+<button onclick="play('KbEM5vf0XGI')">Song5</button>
 <button onclick="stopSong()">Stop</button>
 
-<div id="clockBox">
-<div id="vnClock"></div>
-<div id="worldClock"></div>
-<div id="weather"></div>
-</div>
+<h3 id="clock"></h3>
 
-<h2>Gomoku AI Ultra</h2>
+<h2>Gomoku AI</h2>
 
 <div id="board"></div>
 
-<button onclick="resetGame()">Reset Game</button>
+<button onclick="resetGame()">Reset</button>
 
-<div id="footer">
+<br><br>
 
-<a href="https://github.com/kimkha1985">
-<button>GitHub</button>
-</a>
-
-<a href="https://x.com">
-<button>X</button>
-</a>
-
-</div>
+<a href="https://github.com/kimkha1985"><button>GitHub</button></a>
+<a href="https://x.com"><button>X</button></a>
 
 <script>
 
-function song(id){
+function play(id){
 document.getElementById("videoBox").style.display="block"
 document.getElementById("player").src=
 "https://www.youtube.com/embed/"+id+"?autoplay=1"
@@ -173,65 +142,35 @@ function stopSong(){
 document.getElementById("player").src=""
 }
 
-function updateClock(){
-
-let now=new Date()
-
-document.getElementById("vnClock").innerText=
-"Vietnam: "+now.toLocaleTimeString("vi-VN")
-
-document.getElementById("worldClock").innerText=
-"UTC: "+now.toUTCString()
-
+function clock(){
+let n=new Date()
+document.getElementById("clock").innerText=
+"Vietnam Time: "+n.toLocaleTimeString("vi-VN")
 }
-
-setInterval(updateClock,1000)
-
-async function weather(){
-
-try{
-
-let r=await fetch(
-"https://api.open-meteo.com/v1/forecast?latitude=10.82&longitude=106.63&current_weather=true"
-)
-
-let d=await r.json()
-
-document.getElementById("weather").innerText=
-"Temp Vietnam: "+d.current_weather.temperature+"°C"
-
-}catch(e){}
-
-}
-
-weather()
+setInterval(clock,1000)
 
 let board=document.getElementById("board")
-let size=15
+let size=12
 let grid=[]
 
 for(let i=0;i<size;i++){
-
 grid[i]=[]
-
 for(let j=0;j<size;j++){
 
 grid[i][j]=""
 
 let c=document.createElement("div")
 c.className="cell"
+
 c.onclick=()=>move(i,j)
 
 board.appendChild(c)
 
 }
-
 }
 
 function getCell(x,y){
-
 return board.children[x*size+y]
-
 }
 
 function move(x,y){
@@ -246,36 +185,34 @@ alert("Bạn thắng!")
 return
 }
 
-ai()
+setTimeout(ai,200)
 
 }
 
 function ai(){
 
-let best=-Infinity
+let best=-999
 let move=null
 
 for(let i=0;i<size;i++){
-
 for(let j=0;j<size;j++){
 
-if(grid[i][j]==""){
+if(grid[i][j]=="" && near(i,j)){
 
 grid[i][j]="O"
 
-let s=minimax(2,false)
+let score=evaluate()
 
 grid[i][j]=""
 
-if(s>best){
-best=s
+if(score>best){
+best=score
 move=[i,j]
 }
 
 }
 
 }
-
 }
 
 if(move){
@@ -292,60 +229,24 @@ alert("AI thắng!")
 
 }
 
-function minimax(depth,isMax){
+function near(x,y){
 
-if(depth==0) return evaluate()
+for(let dx=-2;dx<=2;dx++){
+for(let dy=-2;dy<=2;dy++){
 
-if(isMax){
+let i=x+dx
+let j=y+dy
 
-let best=-Infinity
+if(i>=0 && j>=0 && i<size && j<size){
 
-for(let i=0;i<size;i++){
-
-for(let j=0;j<size;j++){
-
-if(grid[i][j]==""){
-
-grid[i][j]="O"
-
-best=Math.max(best,minimax(depth-1,false))
-
-grid[i][j]=""
+if(grid[i][j]!="") return true
 
 }
 
 }
-
 }
 
-return best
-
-}else{
-
-let best=Infinity
-
-for(let i=0;i<size;i++){
-
-for(let j=0;j<size;j++){
-
-if(grid[i][j]==""){
-
-grid[i][j]="X"
-
-best=Math.min(best,minimax(depth-1,true))
-
-grid[i][j]=""
-
-}
-
-}
-
-}
-
-return best
-
-}
-
+return false
 }
 
 function evaluate(){
@@ -353,19 +254,15 @@ function evaluate(){
 let score=0
 
 for(let i=0;i<size;i++){
-
 for(let j=0;j<size;j++){
 
 if(grid[i][j]=="O") score+=scorePoint(i,j,"O")
-
 if(grid[i][j]=="X") score-=scorePoint(i,j,"X")
 
 }
-
 }
 
 return score
-
 }
 
 function scorePoint(x,y,p){
@@ -386,7 +283,6 @@ else if(line==1) total+=10
 }
 
 return total
-
 }
 
 function check(x,y,p){
@@ -406,16 +302,13 @@ let c=0
 let i=x+dx
 let j=y+dy
 
-while(i>=0&&j>=0&&i<size&&j<size&&grid[i][j]==p){
-
+while(i>=0 && j>=0 && i<size && j<size && grid[i][j]==p){
 c++
 i+=dx
 j+=dy
-
 }
 
 return c
-
 }
 
 function resetGame(){
@@ -425,20 +318,19 @@ location.reload()
 function flower(){
 
 let f=document.createElement("div")
-
 f.className="flower"
 f.innerText="🌸"
 
 f.style.left=Math.random()*100+"vw"
-f.style.animationDuration=6+Math.random()*5+"s"
+f.style.animationDuration=6+Math.random()*6+"s"
 
 document.body.appendChild(f)
 
-setTimeout(()=>f.remove(),10000)
+setTimeout(()=>f.remove(),12000)
 
 }
 
-setInterval(flower,600)
+setInterval(flower,800)
 
 </script>
 
