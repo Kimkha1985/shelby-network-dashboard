@@ -1,216 +1,156 @@
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-<title>Lúa Về Nhà</title>
+<title>Lúa Về Nhà GOD</title>
+
+<link rel="manifest" href="manifest.json">
 
 <style>
 
 body{
 margin:0;
-font-family:Segoe UI;
+font-family:Arial;
+background:black;
 color:white;
 text-align:center;
 overflow-x:hidden;
-background:#000;
 }
 
-/* nền sao */
-
-#stars{
+canvas{
 position:fixed;
-width:100%;
-height:100%;
-background:radial-gradient(white 1px, transparent 1px);
-background-size:40px 40px;
-animation:moveStars 60s linear infinite;
-opacity:0.4;
+top:0;
+left:0;
+z-index:-1;
 }
 
-@keyframes moveStars{
-
-from{transform:translateY(0)}
-to{transform:translateY(-2000px)}
-
-}
-
-.overlay{
-
-position:relative;
-padding:30px;
-
+.container{
+max-width:500px;
+margin:auto;
+padding:20px;
 }
 
 .avatar{
-
-width:160px;
-height:160px;
+width:150px;
+height:150px;
 border-radius:50%;
 border:4px solid white;
-box-shadow:0 0 30px white;
-animation:glow 2s infinite alternate;
-
-}
-
-@keyframes glow{
-
-from{box-shadow:0 0 10px white}
-to{box-shadow:0 0 35px #00ffff}
-
+box-shadow:0 0 25px white;
+object-fit:cover;
 }
 
 .card{
-
-background:rgba(255,255,255,0.1);
-backdrop-filter:blur(10px);
+background:rgba(255,255,255,0.15);
+backdrop-filter:blur(12px);
 padding:20px;
-margin:25px auto;
-max-width:500px;
-border-radius:16px;
-
+margin-top:20px;
+border-radius:15px;
+box-shadow:0 10px 30px rgba(0,0,0,0.4);
 }
 
 button{
-
-padding:10px 20px;
-border:none;
-border-radius:10px;
 background:#ff9800;
+border:none;
+padding:10px 15px;
+border-radius:10px;
 color:white;
+font-weight:bold;
 cursor:pointer;
-
+margin:5px;
 }
 
-button:hover{
-
-background:#ffb74d;
-
-}
-
-/* game */
-
-.board{
-
+.grid{
 display:grid;
 grid-template-columns:repeat(3,1fr);
 gap:10px;
-max-width:300px;
-margin:auto;
-
+margin-top:10px;
 }
 
 .cell{
-
 background:white;
 color:black;
-height:90px;
-font-size:40px;
+font-size:30px;
+height:70px;
 display:flex;
 align-items:center;
 justify-content:center;
-border-radius:12px;
+border-radius:10px;
 cursor:pointer;
-transition:0.2s;
-
-}
-
-.cell:hover{
-
-transform:scale(1.1);
-
 }
 
 </style>
-
 </head>
 
 <body>
 
-<div id="stars"></div>
+<canvas id="stars"></canvas>
 
-<div class="overlay">
+<div class="container">
 
-<h1>Lúa Về Nhà</h1>
+<h1>🌾 Lúa Về Nhà 👑</h1>
 
-<img src="avatar.jpg" class="avatar">
-
-<!-- MUSIC -->
+<img class="avatar"
+src="https://i.imgur.com/3ZQ3Z6V.jpg">
 
 <div class="card">
 
-<h2>🎵 Âm Nhạc</h2>
+<h2>🎵 Music Player</h2>
 
-<button onclick="toggleMusic()" id="musicBtn">
+<button onclick="playMusic()">Play</button>
+<button onclick="pauseMusic()">Pause</button>
+<button onclick="nextMusic()">Next</button>
 
-▶ Bật nhạc
+<br><br>
 
-</button>
+<iframe id="music"
 
-<div id="player" style="display:none;margin-top:15px">
+width="100%"
+height="200"
 
-<iframe width="100%" height="300"
-src="https://www.youtube.com/embed/qDQi31U9qrE?loop=1&playlist=qDQi31U9qrE"
-allowfullscreen>
+src="https://www.youtube.com/embed/pRpeEdMmmQ0?enablejsapi=1"
+
+allow="autoplay">
+
 </iframe>
 
 </div>
 
-</div>
-
-<!-- WEATHER -->
-
 <div class="card">
 
-<h2>🌦 Thời tiết TP.HCM</h2>
+<h2>🌡 Thời tiết TP.HCM</h2>
 
 <p id="weather">Đang tải...</p>
 
 </div>
 
-<!-- CLOCK -->
-
 <div class="card">
 
 <h2>🌍 Giờ thế giới</h2>
 
-<div id="vn"></div>
-<div id="tokyo"></div>
-<div id="london"></div>
-<div id="ny"></div>
+<p id="clock"></p>
 
 </div>
-
-<!-- GAME -->
 
 <div class="card">
 
 <h2>🎮 Game Cờ Caro</h2>
 
-<div class="board">
+<div class="grid" id="board"></div>
 
-<div class="cell" onclick="move(this,0)"></div>
-<div class="cell" onclick="move(this,1)"></div>
-<div class="cell" onclick="move(this,2)"></div>
-
-<div class="cell" onclick="move(this,3)"></div>
-<div class="cell" onclick="move(this,4)"></div>
-<div class="cell" onclick="move(this,5)"></div>
-
-<div class="cell" onclick="move(this,6)"></div>
-<div class="cell" onclick="move(this,7)"></div>
-<div class="cell" onclick="move(this,8)"></div>
+<button onclick="reset()">Chơi lại</button>
 
 </div>
 
-<br>
+<div class="card">
 
-<button onclick="resetGame()">Chơi lại</button>
+<h2>💻 GitHub</h2>
 
-<p id="status"></p>
+<a href="https://github.com/Kimkha1985" target="_blank">
+<button>Mở GitHub</button>
+</a>
 
 </div>
 
@@ -218,114 +158,158 @@ allowfullscreen>
 
 <script>
 
-/* MUSIC */
+/* PLAYLIST */
 
-function toggleMusic(){
+let songs=[
+"pRpeEdMmmQ0",
+"EMb_IyLEQtw",
+"qDQi31U9qrE"
+]
 
-let player=document.getElementById("player")
-let btn=document.getElementById("musicBtn")
+let index=0
 
-if(player.style.display==="none"){
-
-player.style.display="block"
-btn.innerText="⏸ Tắt nhạc"
-
-}else{
-
-player.style.display="none"
-btn.innerText="▶ Bật nhạc"
-
+function loadSong(){
+document.getElementById("music").src=
+"https://www.youtube.com/embed/"+songs[index]
 }
 
+function nextMusic(){
+index++
+if(index>=songs.length) index=0
+loadSong()
 }
 
-/* WEATHER */
+function playMusic(){
+loadSong()
+}
 
-fetch("https://api.open-meteo.com/v1/forecast?latitude=10.82&longitude=106.63&current_weather=true")
-
-.then(r=>r.json())
-
-.then(d=>{
-
-document.getElementById("weather").innerText=
-
-"Nhiệt độ hiện tại: "+d.current_weather.temperature+"°C"
-
-})
+function pauseMusic(){
+document.getElementById("music").src=""
+}
 
 /* CLOCK */
 
-function updateTime(){
+function clock(){
 
-let n=new Date()
+let now=new Date()
 
-document.getElementById("vn").innerText="Việt Nam: "+n.toLocaleTimeString("vi-VN",{timeZone:"Asia/Ho_Chi_Minh"})
-document.getElementById("tokyo").innerText="Tokyo: "+n.toLocaleTimeString("ja-JP",{timeZone:"Asia/Tokyo"})
-document.getElementById("london").innerText="London: "+n.toLocaleTimeString("en-GB",{timeZone:"Europe/London"})
-document.getElementById("ny").innerText="New York: "+n.toLocaleTimeString("en-US",{timeZone:"America/New_York"})
+let vn=now.toLocaleTimeString("vi-VN",{timeZone:"Asia/Ho_Chi_Minh"})
+let tokyo=now.toLocaleTimeString("en-US",{timeZone:"Asia/Tokyo"})
+let london=now.toLocaleTimeString("en-US",{timeZone:"Europe/London"})
+let ny=now.toLocaleTimeString("en-US",{timeZone:"America/New_York"})
+
+document.getElementById("clock").innerHTML=
+
+"🇻🇳 Việt Nam: "+vn+"<br>"+
+"🇯🇵 Tokyo: "+tokyo+"<br>"+
+"🇬🇧 London: "+london+"<br>"+
+"🇺🇸 New York: "+ny
 
 }
 
-setInterval(updateTime,1000)
+setInterval(clock,1000)
 
-updateTime()
+/* WEATHER */
 
-/* GAME */
+async function weather(){
 
-let board=["","","","","","","","",""]
+let url="https://api.open-meteo.com/v1/forecast?latitude=10.82&longitude=106.63&current_weather=true"
+
+let res=await fetch(url)
+let data=await res.json()
+
+document.getElementById("weather").innerHTML=
+"Nhiệt độ: "+data.current_weather.temperature+"°C"
+
+}
+
+weather()
+
+/* CARO */
+
+let board=document.getElementById("board")
 let player="X"
-let gameOver=false
 
-function move(cell,i){
+function create(){
 
-if(board[i]!=="" || gameOver) return
+board.innerHTML=""
 
-board[i]=player
+for(let i=0;i<9;i++){
 
-cell.innerText=player
+let cell=document.createElement("div")
+cell.className="cell"
 
-checkWin()
+cell.onclick=function(){
 
-player = player==="X" ? "O":"X"
+if(cell.innerHTML===""){
 
-}
-
-function checkWin(){
-
-let win=[
-[0,1,2],[3,4,5],[6,7,8],
-[0,3,6],[1,4,7],[2,5,8],
-[0,4,8],[2,4,6]
-]
-
-for(let c of win){
-
-if(board[c[0]] && board[c[0]]===board[c[1]] && board[c[1]]===board[c[2]]){
-
-document.getElementById("status").innerText="Người thắng: "+board[c[0]]
-
-gameOver=true
+cell.innerHTML=player
+player=player==="X"?"O":"X"
 
 }
 
 }
 
-}
-
-function resetGame(){
-
-board=["","","","","","","","",""]
-
-gameOver=false
-
-document.querySelectorAll(".cell").forEach(c=>c.innerText="")
-
-document.getElementById("status").innerText=""
+board.appendChild(cell)
 
 }
+
+}
+
+function reset(){
+player="X"
+create()
+}
+
+create()
+
+/* GALAXY */
+
+let canvas=document.getElementById("stars")
+let ctx=canvas.getContext("2d")
+
+canvas.width=window.innerWidth
+canvas.height=window.innerHeight
+
+let stars=[]
+
+for(let i=0;i<200;i++){
+
+stars.push({
+
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
+size:Math.random()*2
+
+})
+
+}
+
+function draw(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height)
+
+ctx.fillStyle="white"
+
+stars.forEach(s=>{
+
+ctx.beginPath()
+ctx.arc(s.x,s.y,s.size,0,Math.PI*2)
+ctx.fill()
+
+s.y+=0.3
+
+if(s.y>canvas.height)s.y=0
+
+})
+
+requestAnimationFrame(draw)
+
+}
+
+draw()
 
 </script>
 
 </body>
-
 </html>
