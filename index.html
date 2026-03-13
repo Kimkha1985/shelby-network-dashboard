@@ -21,35 +21,35 @@ height:100vh;
 overflow:hidden;
 }
 
-/* animated background */
+/* animated blockchain background */
 
 body::before{
 content:"";
 position:fixed;
 width:200%;
 height:200%;
-background:
-radial-gradient(circle,#00ff9c22 1px,transparent 1px);
-background-size:40px 40px;
-animation:move 20s linear infinite;
+background-image:
+radial-gradient(circle,#00ff9c33 2px,transparent 2px);
+background-size:60px 60px;
+animation:blockmove 25s linear infinite;
 }
 
-@keyframes move{
+@keyframes blockmove{
 0%{transform:translate(0,0)}
-100%{transform:translate(-200px,-200px)}
+100%{transform:translate(-300px,-300px)}
 }
 
 .sidebar{
-width:230px;
+width:240px;
 background:#020617;
 padding:20px;
-box-shadow:0 0 25px #00ff9c44;
+box-shadow:0 0 30px #00ff9c66;
 z-index:1;
 }
 
 .sidebar h2{
 color:#00ff9c;
-letter-spacing:2px;
+letter-spacing:3px;
 }
 
 .sidebar button{
@@ -84,6 +84,8 @@ display:none;
 display:block;
 }
 
+/* dashboard cards */
+
 .cards{
 display:flex;
 gap:20px;
@@ -93,9 +95,9 @@ flex-wrap:wrap;
 .card{
 background:#111827;
 padding:20px;
-border-radius:12px;
-width:200px;
-box-shadow:0 0 15px #00ff9c33;
+border-radius:14px;
+width:210px;
+box-shadow:0 0 25px #00ff9c44;
 }
 
 .card h3{
@@ -104,42 +106,45 @@ color:#9ca3af;
 }
 
 .card p{
-font-size:26px;
+font-size:28px;
 color:#00ff9c;
 }
 
-/* node map */
+/* world map */
 
-.map{
-margin-top:20px;
+.world{
 background:#111827;
 padding:20px;
 border-radius:12px;
+margin-top:20px;
 box-shadow:0 0 20px #00ff9c22;
 }
 
 .node{
-margin:8px 0;
+margin:10px 0;
+font-size:16px;
 }
+
+/* profile */
 
 .profile{
 background:#111827;
-padding:30px;
+padding:35px;
 border-radius:12px;
 max-width:520px;
-box-shadow:0 0 20px #00ff9c33;
+box-shadow:0 0 25px #00ff9c44;
 text-align:center;
 }
 
 .avatar{
-width:120px;
-height:120px;
+width:130px;
+height:130px;
 border-radius:50%;
 background:#00ff9c;
 display:flex;
 align-items:center;
 justify-content:center;
-font-size:40px;
+font-size:42px;
 color:black;
 margin:auto;
 margin-bottom:15px;
@@ -165,7 +170,7 @@ border-radius:10px;
 <h2>SHELBY</h2>
 
 <button onclick="openPage('dashboard')">Dashboard</button>
-<button onclick="openPage('nodes')">Global Nodes</button>
+<button onclick="openPage('nodes')">Global Network</button>
 <button onclick="openPage('analytics')">Analytics</button>
 <button onclick="openPage('profile')">Profile</button>
 
@@ -183,41 +188,42 @@ border-radius:10px;
 
 <div class="card">
 <h3>Total Nodes</h3>
-<p id="nodes">120</p>
+<p id="nodes">130</p>
 </div>
 
 <div class="card">
-<h3>Active Peers</h3>
-<p id="peers">540</p>
+<h3>Peers</h3>
+<p id="peers">640</p>
 </div>
 
 <div class="card">
 <h3>TPS</h3>
-<p id="tps">1200</p>
+<p id="tps">1420</p>
 </div>
 
 <div class="card">
 <h3>Latency</h3>
-<p id="latency">20 ms</p>
+<p id="latency">17 ms</p>
 </div>
 
 </div>
 
 </div>
 
-<!-- GLOBAL NODES -->
+<!-- GLOBAL NETWORK -->
 
 <div id="nodes" class="page">
 
-<h1>Global Network Nodes</h1>
+<h1>Global Blockchain Nodes</h1>
 
-<div class="map">
+<div class="world">
 
-<div class="node">🇻🇳 Ho Chi Minh — Online</div>
-<div class="node">🇸🇬 Singapore — Online</div>
-<div class="node">🇯🇵 Tokyo — Online</div>
-<div class="node">🇩🇪 Frankfurt — Online</div>
-<div class="node">🇺🇸 New York — Online</div>
+<div class="node">🇻🇳 Ho Chi Minh — Active</div>
+<div class="node">🇸🇬 Singapore — Active</div>
+<div class="node">🇯🇵 Tokyo — Active</div>
+<div class="node">🇩🇪 Frankfurt — Active</div>
+<div class="node">🇬🇧 London — Active</div>
+<div class="node">🇺🇸 New York — Active</div>
 
 </div>
 
@@ -248,10 +254,10 @@ border-radius:10px;
 <p>Web3 Explorer • Blockchain Learner</p>
 
 <p>
-Exploring blockchain technology and building Web3 dashboards.
+Exploring blockchain and building Web3 dashboards.
 </p>
 
-<p>Projects</p>
+<p><b>Projects</b></p>
 
 <ul style="text-align:left">
 
@@ -278,3 +284,52 @@ GitHub Profile
 <script>
 
 function openPage(page){
+
+document.querySelectorAll(".page").forEach(p=>{
+p.classList.remove("active")
+})
+
+document.getElementById(page).classList.add("active")
+
+}
+
+function random(min,max){
+return Math.floor(Math.random()*(max-min)+min)
+}
+
+setInterval(()=>{
+
+document.getElementById("nodes").innerText=random(120,180)
+document.getElementById("peers").innerText=random(600,900)
+document.getElementById("tps").innerText=random(900,1800)
+document.getElementById("latency").innerText=random(10,35)+" ms"
+
+},2000)
+
+const ctx=document.getElementById("chart")
+
+new Chart(ctx,{
+type:"line",
+data:{
+labels:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+datasets:[{
+label:"Network Traffic",
+data:[12,19,8,15,22,30,27],
+borderColor:"#00ff9c",
+backgroundColor:"#00ff9c33",
+tension:0.4
+}]
+},
+options:{
+plugins:{legend:{labels:{color:"white"}}},
+scales:{
+x:{ticks:{color:"white"}},
+y:{ticks:{color:"white"}}
+}
+}
+})
+
+</script>
+
+</body>
+</html>
