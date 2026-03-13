@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Shelby Network Dashboard</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#0f172a;
+color:white;
+display:flex;
+}
+
+.sidebar{
+width:220px;
+background:#020617;
+height:100vh;
+padding:20px;
+}
+
+.sidebar h2{
+color:#22c55e;
+}
+
+.menu{
+margin-top:30px;
+}
+
+.menu div{
+padding:12px;
+margin:8px 0;
+background:#1e293b;
+border-radius:8px;
+cursor:pointer;
+}
+
+.menu div:hover{
+background:#334155;
+}
+
+.main{
+flex:1;
+padding:30px;
+}
+
+.header{
+font-size:28px;
+margin-bottom:20px;
+}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:20px;
+}
+
+.card{
+background:#1e293b;
+padding:20px;
+border-radius:12px;
+}
+
+.number{
+font-size:28px;
+color:#38bdf8;
+}
+
+.chart{
+margin-top:40px;
+background:#1e293b;
+padding:20px;
+border-radius:12px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+
+<h2>Shelby</h2>
+
+<div class="menu">
+<div>Dashboard</div>
+<div>Nodes</div>
+<div>Network</div>
+<div>Analytics</div>
+<div>Settings</div>
+</div>
+
+</div>
+
+<div class="main">
+
+<div class="header">
+Shelby Network Dashboard
+</div>
+
+<div class="cards">
+
+<div class="card">
+<div>Total Nodes</div>
+<div class="number">128</div>
+</div>
+
+<div class="card">
+<div>Active Peers</div>
+<div class="number">542</div>
+</div>
+
+<div class="card">
+<div>Bandwidth</div>
+<div class="number">2.3 TB</div>
+</div>
+
+<div class="card">
+<div>Latency</div>
+<div class="number">23 ms</div>
+</div>
+
+</div>
+
+<div class="chart">
+
+<canvas id="networkChart"></canvas>
+
+</div>
+
+</div>
+
+<script>
+
+const ctx = document.getElementById('networkChart');
+
+new Chart(ctx, {
+type: 'line',
+data: {
+labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+datasets: [{
+label: 'Network Throughput',
+data: [12,19,8,15,22,30,28],
+borderColor:'#22c55e',
+backgroundColor:'rgba(34,197,94,0.2)',
+tension:0.4
+}]
+},
+options:{
+plugins:{
+legend:{labels:{color:'white'}}
+},
+scales:{
+x:{ticks:{color:'white'}},
+y:{ticks:{color:'white'}}
+}
+}
+});
+
+</script>
+
+</body>
+</html>
