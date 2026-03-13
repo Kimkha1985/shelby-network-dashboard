@@ -1,77 +1,40 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html>
 <head>
-
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Shelby Network V6</title>
+<title>Shelby Network V7 ULTRA</title>
 
 <style>
 
 body{
 margin:0;
 font-family:Arial;
-color:#0ff;
 text-align:center;
-background:black;
+color:#00ffff;
+background:
+radial-gradient(circle at 20% 20%,#001,#000 60%),
+url("https://images.unsplash.com/photo-1462331940025-496dfbfc7564");
+background-size:cover;
 overflow-x:hidden;
 }
 
-/* galaxy background */
-
-body::before{
-content:"";
-position:fixed;
-width:200%;
-height:200%;
-background:url("https://upload.wikimedia.org/wikipedia/commons/5/5f/Hubble_ultra_deep_field.jpg");
-background-size:cover;
-animation:space 120s linear infinite;
-z-index:-1;
-}
-
-@keyframes space{
-from{transform:translate(0,0)}
-to{transform:translate(-1000px,-500px)}
-}
-
-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:10px;
-background:rgba(0,0,0,0.7);
-}
-
-.logo{
-height:45px;
+h1{
+text-shadow:0 0 20px cyan;
 }
 
 .avatar{
-width:50px;
-height:50px;
+width:120px;
+height:120px;
 border-radius:50%;
-}
-
-a{
-color:#0ff;
-margin:10px;
-text-decoration:none;
-}
-
-#clock{
-font-size:18px;
-margin-top:10px;
-}
-
-#weather{
-margin:10px;
+border:3px solid cyan;
+box-shadow:0 0 30px cyan;
 }
 
 #earth{
-width:260px;
+width:200px;
+margin-top:10px;
 animation:spin 25s linear infinite;
+filter:drop-shadow(0 0 20px cyan);
 }
 
 @keyframes spin{
@@ -79,41 +42,72 @@ from{transform:rotate(0deg)}
 to{transform:rotate(360deg)}
 }
 
-#video{
-display:none;
-width:100%;
-height:320px;
-}
-
 button{
-margin:5px;
+margin:6px;
 padding:8px 14px;
-background:black;
-border:1px solid #0ff;
+background:#000;
 color:#0ff;
+border:1px solid #0ff;
 cursor:pointer;
+font-weight:bold;
 }
 
 button:hover{
 background:#0ff;
-color:black;
+color:#000;
 }
 
-/* caro */
+#videoBox{
+display:none;
+margin-top:15px;
+}
+
+iframe{
+width:90%;
+height:420px;
+border:none;
+}
+
+#clockBox{
+margin-top:10px;
+font-size:18px;
+}
 
 #board{
 display:grid;
-grid-template-columns:repeat(15,25px);
+grid-template-columns:repeat(15,32px);
 justify-content:center;
 margin-top:20px;
 }
 
 .cell{
-width:25px;
-height:25px;
-border:1px solid #0ff;
-line-height:25px;
-font-size:18px;
+width:32px;
+height:32px;
+border:1px solid cyan;
+font-size:20px;
+cursor:pointer;
+}
+
+.cell:hover{
+background:#022;
+}
+
+#footer{
+margin-top:40px;
+padding-bottom:30px;
+}
+
+.flower{
+position:fixed;
+top:-20px;
+font-size:20px;
+animation:fall linear infinite;
+}
+
+@keyframes fall{
+to{
+transform:translateY(110vh);
+}
 }
 
 </style>
@@ -121,145 +115,99 @@ font-size:18px;
 
 <body>
 
-<header>
+<h1>Shelby Network Dashboard</h1>
 
-<img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg">
+<img src="avatar.jpg" class="avatar">
 
-<div>
-<a href="https://github.com" target="_blank">GitHub</a>
-<a href="https://x.com" target="_blank">X</a>
+<br>
+
+<img id="earth"
+src="https://upload.wikimedia.org/wikipedia/commons/9/97/The_Earth_seen_from_Apollo_17.jpg">
+
+<div id="videoBox">
+<iframe id="player" allow="autoplay"></iframe>
 </div>
 
-<img class="avatar" src="https://i.imgur.com/4AiXzf8.jpeg">
+<br>
 
-</header>
+<button onclick="song('qDQi31U9qrE')">Song 1</button>
+<button onclick="song('EMb_IyLEQtw')">Song 2</button>
+<button onclick="song('pRpeEdMmmQ0')">Song 3</button>
+<button onclick="song('q--M-6STHlI')">Song 4</button>
+<button onclick="song('KbEM5vf0XGI')">Song 5</button>
+<button onclick="stopSong()">Stop</button>
 
-<h2>🚀 Shelby Network Dashboard V6</h2>
-
-<div id="clock"></div>
-
+<div id="clockBox">
+<div id="vnClock"></div>
+<div id="worldClock"></div>
 <div id="weather"></div>
+</div>
 
-<br>
-
-<img id="earth" src="https://upload.wikimedia.org/wikipedia/commons/9/97/The_Earth_seen_from_Apollo_17.jpg">
-
-<iframe id="video" frameborder="0" allowfullscreen></iframe>
-
-<br>
-
-<button onclick="song1()">Song 1</button>
-<button onclick="song2()">Song 2</button>
-<button onclick="song3()">Song 3</button>
-<button onclick="stopMusic()">Stop</button>
-
-<h3>🎮 Game Caro</h3>
+<h2>Gomoku AI Ultra</h2>
 
 <div id="board"></div>
 
 <button onclick="resetGame()">Reset Game</button>
 
+<div id="footer">
+
+<a href="https://github.com/kimkha1985">
+<button>GitHub</button>
+</a>
+
+<a href="https://x.com">
+<button>X</button>
+</a>
+
+</div>
+
 <script>
 
-/* clock */
+function song(id){
+document.getElementById("videoBox").style.display="block"
+document.getElementById("player").src=
+"https://www.youtube.com/embed/"+id+"?autoplay=1"
+}
 
-function clock(){
+function stopSong(){
+document.getElementById("player").src=""
+}
+
+function updateClock(){
 
 let now=new Date()
 
-document.getElementById("clock").innerHTML=
+document.getElementById("vnClock").innerText=
+"Vietnam: "+now.toLocaleTimeString("vi-VN")
 
-"🇻🇳 VN "+now.toLocaleTimeString("vi-VN",{timeZone:"Asia/Ho_Chi_Minh"})+"<br>"+
-"🇯🇵 Tokyo "+now.toLocaleTimeString("en-US",{timeZone:"Asia/Tokyo"})+"<br>"+
-"🇺🇸 New York "+now.toLocaleTimeString("en-US",{timeZone:"America/New_York"})+"<br>"+
-"🇬🇧 London "+now.toLocaleTimeString("en-US",{timeZone:"Europe/London"})
-
-}
-
-setInterval(clock,1000)
-
-/* weather */
-
-fetch("https://api.open-meteo.com/v1/forecast?latitude=10.82&longitude=106.63&current_weather=true")
-.then(r=>r.json())
-.then(d=>{
-document.getElementById("weather").innerHTML=
-"🌡 Vietnam Temperature: "+d.current_weather.temperature+"°C"
-})
-
-/* music */
-
-let video=document.getElementById("video")
-let earth=document.getElementById("earth")
-
-function song1(){
-
-video.src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-earth.style.display="none"
-video.style.display="block"
+document.getElementById("worldClock").innerText=
+"UTC: "+now.toUTCString()
 
 }
 
-function song2(){
+setInterval(updateClock,1000)
 
-video.src="https://www.youtube.com/embed/3JZ4pnNtyxQ"
-earth.style.display="none"
-video.style.display="block"
+async function weather(){
 
-}
+try{
 
-function song3(){
+let r=await fetch(
+"https://api.open-meteo.com/v1/forecast?latitude=10.82&longitude=106.63&current_weather=true"
+)
 
-video.src="https://www.youtube.com/embed/fLexgOxsZu0"
-earth.style.display="none"
-video.style.display="block"
+let d=await r.json()
 
-}
+document.getElementById("weather").innerText=
+"Temp Vietnam: "+d.current_weather.temperature+"°C"
 
-function stopMusic(){
-
-video.src=""
-video.style.display="none"
-earth.style.display="block"
+}catch(e){}
 
 }
 
-/* flower effect */
+weather()
 
-function flowers(){
-
-const f=document.createElement("div")
-
-f.innerHTML="🌸"
-
-f.style.position="fixed"
-f.style.top="-10px"
-f.style.left=Math.random()*window.innerWidth+"px"
-f.style.fontSize="20px"
-
-document.body.appendChild(f)
-
-let fall=setInterval(()=>{
-
-f.style.top=(f.offsetTop+1)+"px"
-
-if(f.offsetTop>window.innerHeight){
-
-clearInterval(fall)
-f.remove()
-
-}
-
-},20)
-
-}
-
-setInterval(flowers,900)
-
-/* caro */
-
-const board=document.getElementById("board")
-const size=15
+let board=document.getElementById("board")
+let size=15
 let grid=[]
 
 for(let i=0;i<size;i++){
@@ -270,11 +218,11 @@ for(let j=0;j<size;j++){
 
 grid[i][j]=""
 
-let cell=document.createElement("div")
-cell.className="cell"
-cell.onclick=()=>move(i,j)
+let c=document.createElement("div")
+c.className="cell"
+c.onclick=()=>move(i,j)
 
-board.appendChild(cell)
+board.appendChild(c)
 
 }
 
@@ -288,23 +236,23 @@ return board.children[x*size+y]
 
 function move(x,y){
 
-if(grid[x][y]!="")return
+if(grid[x][y]!="") return
 
 grid[x][y]="X"
 getCell(x,y).innerText="X"
 
-if(checkWin(x,y,"X")){
-alert("🏆 Bạn thắng!")
+if(check(x,y,"X")){
+alert("Bạn thắng!")
 return
 }
 
-setTimeout(aiMove,200)
+ai()
 
 }
 
-function aiMove(){
+function ai(){
 
-let bestScore=-9999
+let best=-Infinity
 let move=null
 
 for(let i=0;i<size;i++){
@@ -315,15 +263,13 @@ if(grid[i][j]==""){
 
 grid[i][j]="O"
 
-let score=evaluate()
+let s=minimax(2,false)
 
 grid[i][j]=""
 
-if(score>bestScore){
-
-bestScore=score
+if(s>best){
+best=s
 move=[i,j]
-
 }
 
 }
@@ -335,13 +281,68 @@ move=[i,j]
 if(move){
 
 grid[move[0]][move[1]]="O"
+
 getCell(move[0],move[1]).innerText="O"
 
-if(checkWin(move[0],move[1],"O")){
-
-alert("🤖 AI thắng!")
+if(check(move[0],move[1],"O")){
+alert("AI thắng!")
+}
 
 }
+
+}
+
+function minimax(depth,isMax){
+
+if(depth==0) return evaluate()
+
+if(isMax){
+
+let best=-Infinity
+
+for(let i=0;i<size;i++){
+
+for(let j=0;j<size;j++){
+
+if(grid[i][j]==""){
+
+grid[i][j]="O"
+
+best=Math.max(best,minimax(depth-1,false))
+
+grid[i][j]=""
+
+}
+
+}
+
+}
+
+return best
+
+}else{
+
+let best=Infinity
+
+for(let i=0;i<size;i++){
+
+for(let j=0;j<size;j++){
+
+if(grid[i][j]==""){
+
+grid[i][j]="X"
+
+best=Math.min(best,minimax(depth-1,true))
+
+grid[i][j]=""
+
+}
+
+}
+
+}
+
+return best
 
 }
 
@@ -355,8 +356,9 @@ for(let i=0;i<size;i++){
 
 for(let j=0;j<size;j++){
 
-if(grid[i][j]=="O")score+=1
-if(grid[i][j]=="X")score-=1
+if(grid[i][j]=="O") score+=scorePoint(i,j,"O")
+
+if(grid[i][j]=="X") score-=scorePoint(i,j,"X")
 
 }
 
@@ -366,15 +368,34 @@ return score
 
 }
 
-function checkWin(x,y,p){
+function scorePoint(x,y,p){
+
+let total=0
+
+let dirs=[[1,0],[0,1],[1,1],[1,-1]]
+
+for(let d of dirs){
+
+let line=count(x,y,d[0],d[1],p)+count(x,y,-d[0],-d[1],p)
+
+if(line>=4) total+=10000
+else if(line==3) total+=1000
+else if(line==2) total+=100
+else if(line==1) total+=10
+
+}
+
+return total
+
+}
+
+function check(x,y,p){
 
 return(
-
-count(x,y,1,0,p)+count(x,y,-1,0,p)>=4||
-count(x,y,0,1,p)+count(x,y,0,-1,p)>=4||
-count(x,y,1,1,p)+count(x,y,-1,-1,p)>=4||
-count(x,y,1,-1,p)+count(x,y,-1,1,p)>=4
-
+count(x,y,1,0,p)+count(x,y,-1,0,p)>4||
+count(x,y,0,1,p)+count(x,y,0,-1,p)>4||
+count(x,y,1,1,p)+count(x,y,-1,-1,p)>4||
+count(x,y,1,-1,p)+count(x,y,-1,1,p)>4
 )
 
 }
@@ -398,10 +419,26 @@ return c
 }
 
 function resetGame(){
-
 location.reload()
+}
+
+function flower(){
+
+let f=document.createElement("div")
+
+f.className="flower"
+f.innerText="🌸"
+
+f.style.left=Math.random()*100+"vw"
+f.style.animationDuration=6+Math.random()*5+"s"
+
+document.body.appendChild(f)
+
+setTimeout(()=>f.remove(),10000)
 
 }
+
+setInterval(flower,600)
 
 </script>
 
