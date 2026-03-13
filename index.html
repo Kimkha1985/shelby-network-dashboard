@@ -10,23 +10,37 @@
 
 <style>
 
-*{
-box-sizing:border-box;
-}
-
 body{
 margin:0;
 font-family:Segoe UI;
 color:white;
 text-align:center;
+overflow-x:hidden;
+background:#000;
+}
 
-background:url("background.jpg") center/cover no-repeat fixed;
+/* nền sao */
+
+#stars{
+position:fixed;
+width:100%;
+height:100%;
+background:radial-gradient(white 1px, transparent 1px);
+background-size:40px 40px;
+animation:moveStars 60s linear infinite;
+opacity:0.4;
+}
+
+@keyframes moveStars{
+
+from{transform:translateY(0)}
+to{transform:translateY(-2000px)}
+
 }
 
 .overlay{
 
-background:rgba(0,0,0,0.65);
-min-height:100vh;
+position:relative;
 padding:30px;
 
 }
@@ -37,39 +51,38 @@ width:160px;
 height:160px;
 border-radius:50%;
 border:4px solid white;
-object-fit:cover;
-box-shadow:0 0 20px rgba(255,255,255,0.6);
+box-shadow:0 0 30px white;
+animation:glow 2s infinite alternate;
 
 }
 
-h1{
+@keyframes glow{
 
-margin-top:10px;
-font-size:35px;
+from{box-shadow:0 0 10px white}
+to{box-shadow:0 0 35px #00ffff}
 
 }
 
 .card{
 
-background:rgba(255,255,255,0.12);
-backdrop-filter:blur(12px);
-border-radius:16px;
+background:rgba(255,255,255,0.1);
+backdrop-filter:blur(10px);
 padding:20px;
 margin:25px auto;
 max-width:500px;
-box-shadow:0 10px 30px rgba(0,0,0,0.5);
+border-radius:16px;
 
 }
 
 button{
 
 padding:10px 20px;
-font-size:16px;
 border:none;
 border-radius:10px;
-cursor:pointer;
 background:#ff9800;
 color:white;
+cursor:pointer;
+
 }
 
 button:hover{
@@ -78,16 +91,7 @@ background:#ffb74d;
 
 }
 
-/* CLOCK */
-
-.clock{
-
-font-size:18px;
-margin:6px;
-
-}
-
-/* GAME */
+/* game */
 
 .board{
 
@@ -101,21 +105,22 @@ margin:auto;
 
 .cell{
 
-height:90px;
 background:white;
 color:black;
+height:90px;
 font-size:40px;
 display:flex;
 align-items:center;
 justify-content:center;
-border-radius:10px;
+border-radius:12px;
 cursor:pointer;
+transition:0.2s;
 
 }
 
 .cell:hover{
 
-background:#eee;
+transform:scale(1.1);
 
 }
 
@@ -124,6 +129,8 @@ background:#eee;
 </head>
 
 <body>
+
+<div id="stars"></div>
 
 <div class="overlay">
 
@@ -143,11 +150,10 @@ background:#eee;
 
 </button>
 
-<div id="player" style="display:none;margin-top:15px;">
+<div id="player" style="display:none;margin-top:15px">
 
 <iframe width="100%" height="300"
 src="https://www.youtube.com/embed/qDQi31U9qrE?loop=1&playlist=qDQi31U9qrE"
-allow="autoplay"
 allowfullscreen>
 </iframe>
 
@@ -165,16 +171,16 @@ allowfullscreen>
 
 </div>
 
-<!-- WORLD CLOCK -->
+<!-- CLOCK -->
 
 <div class="card">
 
 <h2>🌍 Giờ thế giới</h2>
 
-<div class="clock" id="vn"></div>
-<div class="clock" id="tokyo"></div>
-<div class="clock" id="london"></div>
-<div class="clock" id="ny"></div>
+<div id="vn"></div>
+<div id="tokyo"></div>
+<div id="london"></div>
+<div id="ny"></div>
 
 </div>
 
@@ -237,12 +243,13 @@ btn.innerText="▶ Bật nhạc"
 
 fetch("https://api.open-meteo.com/v1/forecast?latitude=10.82&longitude=106.63&current_weather=true")
 
-.then(res=>res.json())
+.then(r=>r.json())
 
-.then(data=>{
+.then(d=>{
 
 document.getElementById("weather").innerText=
-"Nhiệt độ hiện tại: "+data.current_weather.temperature+"°C"
+
+"Nhiệt độ hiện tại: "+d.current_weather.temperature+"°C"
 
 })
 
@@ -250,19 +257,12 @@ document.getElementById("weather").innerText=
 
 function updateTime(){
 
-const now=new Date()
+let n=new Date()
 
-document.getElementById("vn").innerText=
-"Việt Nam: "+now.toLocaleTimeString("vi-VN",{timeZone:"Asia/Ho_Chi_Minh"})
-
-document.getElementById("tokyo").innerText=
-"Tokyo: "+now.toLocaleTimeString("ja-JP",{timeZone:"Asia/Tokyo"})
-
-document.getElementById("london").innerText=
-"London: "+now.toLocaleTimeString("en-GB",{timeZone:"Europe/London"})
-
-document.getElementById("ny").innerText=
-"New York: "+now.toLocaleTimeString("en-US",{timeZone:"America/New_York"})
+document.getElementById("vn").innerText="Việt Nam: "+n.toLocaleTimeString("vi-VN",{timeZone:"Asia/Ho_Chi_Minh"})
+document.getElementById("tokyo").innerText="Tokyo: "+n.toLocaleTimeString("ja-JP",{timeZone:"Asia/Tokyo"})
+document.getElementById("london").innerText="London: "+n.toLocaleTimeString("en-GB",{timeZone:"Europe/London"})
+document.getElementById("ny").innerText="New York: "+n.toLocaleTimeString("en-US",{timeZone:"America/New_York"})
 
 }
 
@@ -276,11 +276,11 @@ let board=["","","","","","","","",""]
 let player="X"
 let gameOver=false
 
-function move(cell,index){
+function move(cell,i){
 
-if(board[index]!=="" || gameOver) return
+if(board[i]!=="" || gameOver) return
 
-board[index]=player
+board[i]=player
 
 cell.innerText=player
 
@@ -292,7 +292,7 @@ player = player==="X" ? "O":"X"
 
 function checkWin(){
 
-const win=[
+let win=[
 [0,1,2],[3,4,5],[6,7,8],
 [0,3,6],[1,4,7],[2,5,8],
 [0,4,8],[2,4,6]
@@ -327,4 +327,5 @@ document.getElementById("status").innerText=""
 </script>
 
 </body>
+
 </html>
