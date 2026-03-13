@@ -1,10 +1,9 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Shelby Network Dashboard</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -14,15 +13,15 @@
 body{
 margin:0;
 font-family:Arial;
-background:#0f172a;
+background:#0b1220;
 color:white;
 display:flex;
+height:100vh;
 }
 
 .sidebar{
 width:220px;
-background:#020617;
-height:100vh;
+background:#070d1a;
 padding:20px;
 }
 
@@ -30,20 +29,19 @@ padding:20px;
 color:#22c55e;
 }
 
-.menu{
-margin-top:30px;
-}
-
-.menu div{
+.sidebar button{
+width:100%;
 padding:12px;
-margin:8px 0;
-background:#1e293b;
-border-radius:8px;
+margin-top:10px;
+background:#111827;
+border:none;
+color:white;
+border-radius:6px;
 cursor:pointer;
 }
 
-.menu div:hover{
-background:#334155;
+.sidebar button:hover{
+background:#22c55e;
 }
 
 .main{
@@ -51,33 +49,34 @@ flex:1;
 padding:30px;
 }
 
-.header{
-font-size:28px;
-margin-bottom:20px;
-}
-
 .cards{
-display:grid;
-grid-template-columns:repeat(4,1fr);
+display:flex;
 gap:20px;
+flex-wrap:wrap;
 }
 
 .card{
-background:#1e293b;
+background:#111827;
 padding:20px;
-border-radius:12px;
+border-radius:10px;
+width:180px;
 }
 
-.number{
-font-size:28px;
-color:#38bdf8;
+.card h3{
+margin:0;
+color:#9ca3af;
 }
 
-.chart{
+.card p{
+font-size:24px;
+color:#22c55e;
+}
+
+.chartbox{
 margin-top:40px;
-background:#1e293b;
+background:#111827;
 padding:20px;
-border-radius:12px;
+border-radius:10px;
 }
 
 </style>
@@ -86,83 +85,93 @@ border-radius:12px;
 <body>
 
 <div class="sidebar">
-
 <h2>Shelby</h2>
 
-<div class="menu">
-<div>Dashboard</div>
-<div>Nodes</div>
-<div>Network</div>
-<div>Analytics</div>
-<div>Settings</div>
-</div>
+<button onclick="show('dashboard')">Dashboard</button>
+<button onclick="show('nodes')">Nodes</button>
+<button onclick="show('network')">Network</button>
+<button onclick="show('analytics')">Analytics</button>
+<button onclick="show('settings')">Settings</button>
 
 </div>
 
 <div class="main">
 
-<div class="header">
-Shelby Network Dashboard
-</div>
+<h1 id="title">Shelby Network Dashboard</h1>
 
 <div class="cards">
 
 <div class="card">
-<div>Total Nodes</div>
-<div class="number">128</div>
+<h3>Total Nodes</h3>
+<p id="nodes">120</p>
 </div>
 
 <div class="card">
-<div>Active Peers</div>
-<div class="number">542</div>
+<h3>Active Peers</h3>
+<p id="peers">500</p>
 </div>
 
 <div class="card">
-<div>Bandwidth</div>
-<div class="number">2.3 TB</div>
+<h3>Bandwidth</h3>
+<p id="bandwidth">2.1 TB</p>
 </div>
 
 <div class="card">
-<div>Latency</div>
-<div class="number">23 ms</div>
+<h3>Latency</h3>
+<p id="latency">25 ms</p>
 </div>
 
 </div>
 
-<div class="chart">
-
-<canvas id="networkChart"></canvas>
-
+<div class="chartbox">
+<canvas id="chart"></canvas>
 </div>
 
 </div>
 
 <script>
 
-const ctx = document.getElementById('networkChart');
+function random(min,max){
+return Math.floor(Math.random()*(max-min)+min)
+}
 
-new Chart(ctx, {
-type: 'line',
-data: {
-labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
-datasets: [{
-label: 'Network Throughput',
-data: [12,19,8,15,22,30,28],
+setInterval(()=>{
+
+document.getElementById("nodes").innerText=random(120,150)
+document.getElementById("peers").innerText=random(500,650)
+document.getElementById("bandwidth").innerText=(Math.random()*3).toFixed(2)+" TB"
+document.getElementById("latency").innerText=random(15,40)+" ms"
+
+},2000)
+
+function show(page){
+
+document.getElementById("title").innerText="Shelby "+page
+
+}
+
+const ctx=document.getElementById('chart')
+
+new Chart(ctx,{
+type:'line',
+data:{
+labels:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+datasets:[{
+label:'Network Throughput',
+data:[12,19,8,15,22,30,27],
 borderColor:'#22c55e',
-backgroundColor:'rgba(34,197,94,0.2)',
+backgroundColor:'#22c55e33',
 tension:0.4
 }]
 },
 options:{
-plugins:{
-legend:{labels:{color:'white'}}
-},
+plugins:{legend:{labels:{color:"white"}}},
 scales:{
-x:{ticks:{color:'white'}},
-y:{ticks:{color:'white'}}
+x:{ticks:{color:"white"}},
+y:{ticks:{color:"white"}}
 }
 }
-});
+})
 
 </script>
 
