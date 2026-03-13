@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Shelby AI Dashboard</title>
+<title>Shelby ULTRA AI Dashboard</title>
 
 <style>
 
@@ -16,32 +16,43 @@ font-family:Arial;
 overflow:hidden;
 }
 
+/* MATRIX BACKGROUND */
+
+canvas#matrix{
+position:fixed;
+top:0;
+left:0;
+z-index:-1;
+}
+
+/* LAYOUT */
+
 #container{
 display:flex;
-height:100vh;
 width:100vw;
+height:100vh;
 }
 
 #left{
 flex:1;
-position:relative;
 display:flex;
 align-items:center;
 justify-content:center;
-background:#000;
+position:relative;
 }
 
 #right{
 width:420px;
-background:#050505;
+background:rgba(0,0,0,0.8);
 border-left:1px solid cyan;
 padding:20px;
 overflow:auto;
 }
 
 #earth{
-width:320px;
-animation:spin 30s linear infinite;
+width:350px;
+animation:spin 25s linear infinite;
+filter:drop-shadow(0 0 20px cyan);
 }
 
 @keyframes spin{
@@ -49,21 +60,28 @@ from{transform:rotate(0)}
 to{transform:rotate(360deg)}
 }
 
+/* VIDEO */
+
 #video{
 position:absolute;
+top:0;
+left:0;
 width:100%;
 height:100%;
 display:none;
-top:0;
-left:0;
 }
 
+/* AVATAR */
+
 #avatar{
-width:90px;
-height:90px;
+width:100px;
+height:100px;
 border-radius:50%;
 border:3px solid cyan;
+box-shadow:0 0 15px cyan;
 }
+
+/* BUTTON */
 
 button{
 background:cyan;
@@ -74,16 +92,11 @@ cursor:pointer;
 font-weight:bold;
 }
 
-canvas{
+/* BOARD */
+
+canvas#board{
 background:#111;
 border:1px solid cyan;
-}
-
-a{
-color:cyan;
-display:block;
-margin-top:8px;
-text-decoration:none;
 }
 
 /* FLOWER */
@@ -99,10 +112,19 @@ animation:fall linear infinite;
 to{transform:translateY(110vh);}
 }
 
+a{
+color:cyan;
+text-decoration:none;
+display:block;
+margin-top:8px;
+}
+
 </style>
 </head>
 
 <body>
+
+<canvas id="matrix"></canvas>
 
 <div id="container">
 
@@ -125,7 +147,7 @@ allowfullscreen></iframe>
 <img id="avatar"
 src="https://i.imgur.com/4Z7b7YQ.png">
 
-<p>Admin Dashboard</p>
+<p>AI Dashboard</p>
 
 <button onclick="playMusic()">🎵 Mở nhạc</button>
 <button onclick="stopMusic()">❌ Tắt video</button>
@@ -140,7 +162,7 @@ src="https://i.imgur.com/4Z7b7YQ.png">
 
 <h3>Nhiệt độ</h3>
 
-<div id="tempVN">Loading...</div>
+<div id="tempVN"></div>
 <div id="tempUS"></div>
 <div id="tempJP"></div>
 
@@ -150,27 +172,68 @@ src="https://i.imgur.com/4Z7b7YQ.png">
 
 <h3>Links</h3>
 
-<a href="https://github.com/kimkha1985" target="_blank">GitHub</a>
-<a href="https://x.com/" target="_blank">X</a>
+<a href="https://github.com/kimkha1985" target="_blank">
+GitHub
+</a>
+
+<a href="https://x.com/" target="_blank">
+X
+</a>
 
 </div>
 </div>
 
 <script>
 
+/* MATRIX EFFECT */
+
+const matrix=document.getElementById("matrix");
+const ctxM=matrix.getContext("2d");
+
+matrix.width=window.innerWidth;
+matrix.height=window.innerHeight;
+
+const letters="01";
+const fontSize=14;
+const columns=matrix.width/fontSize;
+
+const drops=[];
+
+for(let x=0;x<columns;x++) drops[x]=1;
+
+function drawMatrix(){
+
+ctxM.fillStyle="rgba(0,0,0,0.05)";
+ctxM.fillRect(0,0,matrix.width,matrix.height);
+
+ctxM.fillStyle="#0f0";
+ctxM.font=fontSize+"px monospace";
+
+for(let i=0;i<drops.length;i++){
+
+const text=letters[Math.floor(Math.random()*letters.length)];
+
+ctxM.fillText(text,i*fontSize,drops[i]*fontSize);
+
+if(drops[i]*fontSize>matrix.height && Math.random()>0.975)
+drops[i]=0;
+
+drops[i]++;
+
+}
+
+}
+
+setInterval(drawMatrix,50);
+
 /* CLOCK */
 
 function updateClock(){
 
-let vn=new Date().toLocaleTimeString("vi-VN",{timeZone:"Asia/Ho_Chi_Minh"});
-let us=new Date().toLocaleTimeString("en-US",{timeZone:"America/New_York"});
-let jp=new Date().toLocaleTimeString("ja-JP",{timeZone:"Asia/Tokyo"});
-let uk=new Date().toLocaleTimeString("en-GB",{timeZone:"Europe/London"});
-
-timeVN.innerText="VN: "+vn;
-timeUS.innerText="New York: "+us;
-timeJP.innerText="Tokyo: "+jp;
-timeUK.innerText="London: "+uk;
+timeVN.innerText="VN: "+new Date().toLocaleTimeString("vi-VN",{timeZone:"Asia/Ho_Chi_Minh"});
+timeUS.innerText="New York: "+new Date().toLocaleTimeString("en-US",{timeZone:"America/New_York"});
+timeJP.innerText="Tokyo: "+new Date().toLocaleTimeString("ja-JP",{timeZone:"Asia/Tokyo"});
+timeUK.innerText="London: "+new Date().toLocaleTimeString("en-GB",{timeZone:"Europe/London"});
 
 }
 
@@ -182,18 +245,14 @@ updateClock();
 async function weather(){
 
 let vn=await fetch("https://api.open-meteo.com/v1/forecast?latitude=10.82&longitude=106.63&current_weather=true").then(r=>r.json());
-let us=await fetch("https://api.open-meteo.com/v1/forecast?latitude=40.71&longitude=-74&current_weather=true").then(r=>r.json());
-let jp=await fetch("https://api.open-meteo.com/v1/forecast?latitude=35.68&longitude=139.69&current_weather=true").then(r=>r.json());
 
 tempVN.innerText="VN: "+vn.current_weather.temperature+"°C";
-tempUS.innerText="New York: "+us.current_weather.temperature+"°C";
-tempJP.innerText="Tokyo: "+jp.current_weather.temperature+"°C";
 
 }
 
 weather();
 
-/* FLOWERS */
+/* FLOWER */
 
 function flower(){
 
@@ -202,7 +261,7 @@ f.className="flower";
 f.innerHTML="🌸";
 
 f.style.left=Math.random()*100+"vw";
-f.style.animationDuration=6+Math.random()*8+"s";
+f.style.animationDuration=6+Math.random()*10+"s";
 
 document.body.appendChild(f);
 
@@ -210,25 +269,21 @@ setTimeout(()=>f.remove(),15000);
 
 }
 
-setInterval(flower,700);
+setInterval(flower,800);
 
 /* VIDEO */
 
 function playMusic(){
-
 earth.style.display="none";
 video.style.display="block";
-
 }
 
 function stopMusic(){
-
 earth.style.display="block";
 video.style.display="none";
-
 }
 
-/* CARO GAME */
+/* CARO GAME AI */
 
 const canvas=document.getElementById("board");
 const ctx=canvas.getContext("2d");
@@ -279,10 +334,13 @@ if(board[i][j]==2){
 
 ctx.strokeStyle="red";
 ctx.beginPath();
+
 ctx.moveTo(i*cell+5,j*cell+5);
 ctx.lineTo(i*cell+cell-5,j*cell+cell-5);
+
 ctx.moveTo(i*cell+cell-5,j*cell+5);
 ctx.lineTo(i*cell+5,j*cell+cell-5);
+
 ctx.stroke();
 
 }
@@ -291,8 +349,6 @@ ctx.stroke();
 }
 
 }
-
-/* PLAYER MOVE */
 
 canvas.addEventListener("click",function(e){
 
@@ -317,8 +373,6 @@ draw();
 }
 
 });
-
-/* AI HARD */
 
 function aiMove(){
 
