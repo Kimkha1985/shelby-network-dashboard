@@ -1,10 +1,11 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shelby Network Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Shelby Network | Lúa Về Nhà</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -13,20 +14,42 @@
 body{
 margin:0;
 font-family:Arial;
-background:#0b1220;
+background:#020617;
 color:white;
 display:flex;
 height:100vh;
+overflow:hidden;
+}
+
+/* animated background */
+
+body::before{
+content:"";
+position:fixed;
+width:200%;
+height:200%;
+background:
+radial-gradient(circle,#00ff9c22 1px,transparent 1px);
+background-size:40px 40px;
+animation:move 20s linear infinite;
+}
+
+@keyframes move{
+0%{transform:translate(0,0)}
+100%{transform:translate(-200px,-200px)}
 }
 
 .sidebar{
-width:220px;
-background:#070d1a;
+width:230px;
+background:#020617;
 padding:20px;
+box-shadow:0 0 25px #00ff9c44;
+z-index:1;
 }
 
 .sidebar h2{
-color:#22c55e;
+color:#00ff9c;
+letter-spacing:2px;
 }
 
 .sidebar button{
@@ -36,17 +59,29 @@ margin-top:10px;
 background:#111827;
 border:none;
 color:white;
-border-radius:6px;
+border-radius:8px;
 cursor:pointer;
+transition:0.3s;
 }
 
 .sidebar button:hover{
-background:#22c55e;
+background:#00ff9c;
+color:black;
 }
 
 .main{
 flex:1;
 padding:30px;
+overflow:auto;
+z-index:1;
+}
+
+.page{
+display:none;
+}
+
+.active{
+display:block;
 }
 
 .cards{
@@ -58,8 +93,9 @@ flex-wrap:wrap;
 .card{
 background:#111827;
 padding:20px;
-border-radius:10px;
-width:180px;
+border-radius:12px;
+width:200px;
+box-shadow:0 0 15px #00ff9c33;
 }
 
 .card h3{
@@ -68,14 +104,54 @@ color:#9ca3af;
 }
 
 .card p{
-font-size:24px;
-color:#22c55e;
+font-size:26px;
+color:#00ff9c;
 }
 
-.chartbox{
-margin-top:40px;
+/* node map */
+
+.map{
+margin-top:20px;
 background:#111827;
 padding:20px;
+border-radius:12px;
+box-shadow:0 0 20px #00ff9c22;
+}
+
+.node{
+margin:8px 0;
+}
+
+.profile{
+background:#111827;
+padding:30px;
+border-radius:12px;
+max-width:520px;
+box-shadow:0 0 20px #00ff9c33;
+text-align:center;
+}
+
+.avatar{
+width:120px;
+height:120px;
+border-radius:50%;
+background:#00ff9c;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:40px;
+color:black;
+margin:auto;
+margin-bottom:15px;
+}
+
+.profile h2{
+color:#00ff9c;
+}
+
+canvas{
+background:#020617;
+padding:10px;
 border-radius:10px;
 }
 
@@ -85,19 +161,23 @@ border-radius:10px;
 <body>
 
 <div class="sidebar">
-<h2>Shelby</h2>
 
-<button onclick="show('dashboard')">Dashboard</button>
-<button onclick="show('nodes')">Nodes</button>
-<button onclick="show('network')">Network</button>
-<button onclick="show('analytics')">Analytics</button>
-<button onclick="show('settings')">Settings</button>
+<h2>SHELBY</h2>
+
+<button onclick="openPage('dashboard')">Dashboard</button>
+<button onclick="openPage('nodes')">Global Nodes</button>
+<button onclick="openPage('analytics')">Analytics</button>
+<button onclick="openPage('profile')">Profile</button>
 
 </div>
 
 <div class="main">
 
-<h1 id="title">Shelby Network Dashboard</h1>
+<!-- DASHBOARD -->
+
+<div id="dashboard" class="page active">
+
+<h1>Shelby Network Dashboard</h1>
 
 <div class="cards">
 
@@ -108,72 +188,93 @@ border-radius:10px;
 
 <div class="card">
 <h3>Active Peers</h3>
-<p id="peers">500</p>
+<p id="peers">540</p>
 </div>
 
 <div class="card">
-<h3>Bandwidth</h3>
-<p id="bandwidth">2.1 TB</p>
+<h3>TPS</h3>
+<p id="tps">1200</p>
 </div>
 
 <div class="card">
 <h3>Latency</h3>
-<p id="latency">25 ms</p>
+<p id="latency">20 ms</p>
 </div>
 
 </div>
 
-<div class="chartbox">
+</div>
+
+<!-- GLOBAL NODES -->
+
+<div id="nodes" class="page">
+
+<h1>Global Network Nodes</h1>
+
+<div class="map">
+
+<div class="node">🇻🇳 Ho Chi Minh — Online</div>
+<div class="node">🇸🇬 Singapore — Online</div>
+<div class="node">🇯🇵 Tokyo — Online</div>
+<div class="node">🇩🇪 Frankfurt — Online</div>
+<div class="node">🇺🇸 New York — Online</div>
+
+</div>
+
+</div>
+
+<!-- ANALYTICS -->
+
+<div id="analytics" class="page">
+
+<h1>Network Analytics</h1>
+
 <canvas id="chart"></canvas>
+
+</div>
+
+<!-- PROFILE -->
+
+<div id="profile" class="page">
+
+<h1>Profile</h1>
+
+<div class="profile">
+
+<div class="avatar">LVN</div>
+
+<h2>Lúa Về Nhà</h2>
+
+<p>Web3 Explorer • Blockchain Learner</p>
+
+<p>
+Exploring blockchain technology and building Web3 dashboards.
+</p>
+
+<p>Projects</p>
+
+<ul style="text-align:left">
+
+<li>Shelby Network Dashboard</li>
+<li>Web3 Experiments</li>
+<li>Blockchain Research</li>
+
+</ul>
+
+<p>
+
+<a href="https://github.com/Kimkha1985" style="color:#00ff9c">
+GitHub Profile
+</a>
+
+</p>
+
+</div>
+
 </div>
 
 </div>
 
 <script>
 
-function random(min,max){
-return Math.floor(Math.random()*(max-min)+min)
-}
-
-setInterval(()=>{
-
-document.getElementById("nodes").innerText=random(120,150)
-document.getElementById("peers").innerText=random(500,650)
-document.getElementById("bandwidth").innerText=(Math.random()*3).toFixed(2)+" TB"
-document.getElementById("latency").innerText=random(15,40)+" ms"
-
-},2000)
-
-function show(page){
-
-document.getElementById("title").innerText="Shelby "+page
-
-}
-
-const ctx=document.getElementById('chart')
-
-new Chart(ctx,{
-type:'line',
-data:{
-labels:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
-datasets:[{
-label:'Network Throughput',
-data:[12,19,8,15,22,30,27],
-borderColor:'#22c55e',
-backgroundColor:'#22c55e33',
-tension:0.4
-}]
-},
-options:{
-plugins:{legend:{labels:{color:"white"}}},
-scales:{
-x:{ticks:{color:"white"}},
-y:{ticks:{color:"white"}}
-}
-}
-})
-
-</script>
-
-</body>
-</html>
+function openPage(page){
