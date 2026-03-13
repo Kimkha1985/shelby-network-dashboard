@@ -5,83 +5,163 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-<title>Lúa Về Nhà GOD</title>
-
-<link rel="manifest" href="manifest.json">
+<title>Lúa Về Nhà</title>
 
 <style>
 
-body{
+*{
 margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
 font-family:Arial;
 background:black;
 color:white;
-text-align:center;
-overflow-x:hidden;
+overflow:hidden;
 }
+
+/* nền sao */
 
 canvas{
 position:fixed;
 top:0;
 left:0;
+width:100%;
+height:100%;
 z-index:-1;
 }
 
+/* layout full screen */
+
 .container{
-max-width:500px;
-margin:auto;
+
+width:100vw;
+height:100vh;
+
+display:grid;
+
+grid-template-columns:1fr 1fr 1fr;
+grid-template-rows:auto auto auto;
+
+gap:20px;
+
 padding:20px;
+
 }
 
-.avatar{
-width:150px;
-height:150px;
-border-radius:50%;
-border:4px solid white;
-box-shadow:0 0 25px white;
-object-fit:cover;
-}
+/* card */
 
 .card{
-background:rgba(255,255,255,0.15);
-backdrop-filter:blur(12px);
-padding:20px;
-margin-top:20px;
+
+background:rgba(255,255,255,0.08);
+
+backdrop-filter:blur(10px);
+
 border-radius:15px;
-box-shadow:0 10px 30px rgba(0,0,0,0.4);
+
+padding:20px;
+
+text-align:center;
+
 }
+
+/* avatar */
+
+.avatar{
+
+width:120px;
+height:120px;
+
+border-radius:50%;
+
+border:3px solid white;
+
+box-shadow:0 0 25px white;
+
+}
+
+/* globe */
+
+.globe{
+
+font-size:80px;
+
+animation:spin 10s linear infinite;
+
+}
+
+@keyframes spin{
+
+0%{transform:rotate(0)}
+100%{transform:rotate(360deg)}
+
+}
+
+/* buttons */
 
 button{
-background:#ff9800;
-border:none;
+
 padding:10px 15px;
+
+border:none;
+
 border-radius:10px;
+
+background:orange;
+
 color:white;
+
 font-weight:bold;
+
 cursor:pointer;
+
 margin:5px;
+
 }
 
-.grid{
+/* caro board */
+
+#board{
+
 display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:10px;
+
+grid-template-columns:repeat(12,40px);
+
+gap:5px;
+
+justify-content:center;
+
 margin-top:10px;
+
 }
 
 .cell{
+
+width:40px;
+height:40px;
+
 background:white;
+
 color:black;
-font-size:30px;
-height:70px;
+
+font-size:20px;
+
 display:flex;
+
 align-items:center;
+
 justify-content:center;
-border-radius:10px;
+
 cursor:pointer;
+
+border-radius:5px;
+
 }
 
 </style>
+
 </head>
 
 <body>
@@ -90,27 +170,36 @@ cursor:pointer;
 
 <div class="container">
 
-<h1>🌾 Lúa Về Nhà 👑</h1>
+<div class="card">
 
-<img class="avatar"
-src="https://images.unsplash.com/photo-1506744038136-46273834b3fb">
+<h2>🌾 Lúa Về Nhà 👑</h2>
+
+<br>
+
+<img src="logo.jpg" class="avatar">
+
+</div>
 
 <div class="card">
 
-<h2>🎵 Music Player</h2>
+<h2>🎵 Music</h2>
 
-<button onclick="playMusic()">Play</button>
-<button onclick="pauseMusic()">Pause</button>
-<button onclick="nextMusic()">Next</button>
+<button onclick="play(0)">Song 1</button>
+
+<button onclick="play(1)">Song 2</button>
+
+<button onclick="play(2)">Song 3</button>
+
+<button onclick="stop()">Stop</button>
 
 <br><br>
 
-<iframe id="music"
+<iframe id="player"
 
 width="100%"
 height="200"
 
-src="https://www.youtube.com/embed/pRpeEdMmmQ0?enablejsapi=1"
+src=""
 
 allow="autoplay">
 
@@ -120,36 +209,52 @@ allow="autoplay">
 
 <div class="card">
 
-<h2>🌡 Thời tiết TP.HCM</h2>
+<h2>🌍 Earth</h2>
 
-<p id="weather">Đang tải...</p>
-
-</div>
-
-<div class="card">
-
-<h2>🌍 Giờ thế giới</h2>
-
-<p id="clock"></p>
+<div class="globe">🌎</div>
 
 </div>
 
 <div class="card">
 
-<h2>🎮 Game Cờ Caro</h2>
+<h2>🌡 Weather</h2>
 
-<div class="grid" id="board"></div>
-
-<button onclick="reset()">Chơi lại</button>
+<div>TP.HCM ~ 30°C</div>
 
 </div>
 
 <div class="card">
 
-<h2>💻 GitHub</h2>
+<h2>🌍 World Clock</h2>
+
+<div id="clock"></div>
+
+</div>
+
+<div class="card">
+
+<h2>🎮 Caro AI</h2>
+
+<div id="board"></div>
+
+<button onclick="reset()">Reset</button>
+
+</div>
+
+<div class="card">
+
+<h2>🔗 Links</h2>
 
 <a href="https://github.com/Kimkha1985" target="_blank">
-<button>Mở GitHub</button>
+
+<button>GitHub</button>
+
+</a>
+
+<a href="https://x.com/ChauKimKha" target="_blank">
+
+<button>X</button>
+
 </a>
 
 </div>
@@ -158,33 +263,28 @@ allow="autoplay">
 
 <script>
 
-/* PLAYLIST */
+/* MUSIC */
 
-let songs=[
-"pRpeEdMmmQ0",
-"EMb_IyLEQtw",
-"qDQi31U9qrE"
+const songs=[
+
+"https://www.youtube.com/embed/qDQi31U9qrE",
+
+"https://www.youtube.com/embed/EMb_IyLEQtw",
+
+"https://www.youtube.com/embed/pRpeEdMmmQ0"
+
 ]
 
-let index=0
+function play(i){
 
-function loadSong(){
-document.getElementById("music").src=
-"https://www.youtube.com/embed/"+songs[index]
+document.getElementById("player").src=songs[i]+"?autoplay=1"
+
 }
 
-function nextMusic(){
-index++
-if(index>=songs.length) index=0
-loadSong()
-}
+function stop(){
 
-function playMusic(){
-loadSong()
-}
+document.getElementById("player").src=""
 
-function pauseMusic(){
-document.getElementById("music").src=""
 }
 
 /* CLOCK */
@@ -193,58 +293,41 @@ function clock(){
 
 let now=new Date()
 
-let vn=now.toLocaleTimeString("vi-VN",{timeZone:"Asia/Ho_Chi_Minh"})
-let tokyo=now.toLocaleTimeString("en-US",{timeZone:"Asia/Tokyo"})
-let london=now.toLocaleTimeString("en-US",{timeZone:"Europe/London"})
-let ny=now.toLocaleTimeString("en-US",{timeZone:"America/New_York"})
-
 document.getElementById("clock").innerHTML=
 
-"🇻🇳 Việt Nam: "+vn+"<br>"+
-"🇯🇵 Tokyo: "+tokyo+"<br>"+
-"🇬🇧 London: "+london+"<br>"+
-"🇺🇸 New York: "+ny
+"VN: "+now.toLocaleTimeString("vi-VN")+"<br>"+
+
+"Tokyo: "+now.toLocaleTimeString("en-US",{timeZone:"Asia/Tokyo"})+"<br>"+
+
+"NewYork: "+now.toLocaleTimeString("en-US",{timeZone:"America/New_York"})+"<br>"+
+
+"London: "+now.toLocaleTimeString("en-GB",{timeZone:"Europe/London"})
 
 }
 
 setInterval(clock,1000)
 
-/* WEATHER */
-
-async function weather(){
-
-let url="https://api.open-meteo.com/v1/forecast?latitude=10.82&longitude=106.63&current_weather=true"
-
-let res=await fetch(url)
-let data=await res.json()
-
-document.getElementById("weather").innerHTML=
-"Nhiệt độ: "+data.current_weather.temperature+"°C"
-
-}
-
-weather()
+clock()
 
 /* CARO */
 
-let board=document.getElementById("board")
-let player="X"
+const board=document.getElementById("board")
 
-function create(){
+let cells=[]
 
-board.innerHTML=""
-
-for(let i=0;i<9;i++){
+for(let i=0;i<144;i++){
 
 let cell=document.createElement("div")
+
 cell.className="cell"
 
-cell.onclick=function(){
+cell.onclick=()=>{
 
-if(cell.innerHTML===""){
+if(cell.innerText==""){
 
-cell.innerHTML=player
-player=player==="X"?"O":"X"
+cell.innerText="X"
+
+ai()
 
 }
 
@@ -252,23 +335,36 @@ player=player==="X"?"O":"X"
 
 board.appendChild(cell)
 
+cells.push(cell)
+
 }
+
+function ai(){
+
+let empty=cells.filter(c=>c.innerText=="")
+
+if(empty.length==0)return
+
+let move=empty[Math.floor(Math.random()*empty.length)]
+
+move.innerText="O"
 
 }
 
 function reset(){
-player="X"
-create()
+
+cells.forEach(c=>c.innerText="")
+
 }
 
-create()
+/* STAR BACKGROUND */
 
-/* GALAXY */
+const canvas=document.getElementById("stars")
 
-let canvas=document.getElementById("stars")
-let ctx=canvas.getContext("2d")
+const ctx=canvas.getContext("2d")
 
 canvas.width=window.innerWidth
+
 canvas.height=window.innerHeight
 
 let stars=[]
@@ -278,7 +374,9 @@ for(let i=0;i<200;i++){
 stars.push({
 
 x:Math.random()*canvas.width,
+
 y:Math.random()*canvas.height,
+
 size:Math.random()*2
 
 })
@@ -293,13 +391,7 @@ ctx.fillStyle="white"
 
 stars.forEach(s=>{
 
-ctx.beginPath()
-ctx.arc(s.x,s.y,s.size,0,Math.PI*2)
-ctx.fill()
-
-s.y+=0.3
-
-if(s.y>canvas.height)s.y=0
+ctx.fillRect(s.x,s.y,s.size,s.size)
 
 })
 
