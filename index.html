@@ -145,13 +145,7 @@ show()
 // ALERT
 function setAlert(){
 let coin=alertCoin.value
-let price=alertPrice.value
-
-let a=JSON.parse(localStorage.getItem("alert")||"[]")
-a.push({coin,price})
-localStorage.setItem("alert",JSON.stringify(a))
-showAlert()
-}
+let price=alertPrice.
 
 function showAlert(){
 let a=JSON.parse(localStorage.getItem("alert")||"[]")
