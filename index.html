@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-
-<title>Lua Ve Nha PRO MAX</title>
+<title>Lua Ve Nha PRO++</title>
 
 <style>
 
@@ -14,73 +12,64 @@ margin:0;
 font-family:Arial;
 background:#06192f;
 color:white;
+transition:0.3s;
+}
+
+.light{
+background:#f5f5f5;
+color:#111;
 }
 
 .container{
 display:grid;
-grid-template-columns:300px 1fr 300px;
+grid-template-columns:280px 1fr 280px;
 gap:15px;
 padding:15px;
 }
 
 .card{
 background:rgba(0,0,0,0.6);
-border-radius:18px;
-padding:15px;
-box-shadow:0 0 15px #00eaff;
+border-radius:15px;
+padding:12px;
+box-shadow:0 0 10px #00eaff;
+}
+
+.light .card{
+background:white;
+box-shadow:0 0 10px #ccc;
 }
 
 .title{
 color:#00eaff;
-margin-bottom:10px;
-}
-
-iframe{
-width:100%;
-height:180px;
-border:none;
-border-radius:12px;
-margin-bottom:10px;
+margin-bottom:8px;
 }
 
 .clock{
-font-size:42px;
+font-size:40px;
 text-align:center;
-color:#00ffff;
 }
 
 .crypto div{
 display:flex;
 justify-content:space-between;
 padding:5px;
+cursor:pointer;
 }
 
-.earth{
+button{
+padding:8px;
+border:none;
+border-radius:8px;
+background:#00eaff;
+cursor:pointer;
+}
+
+input{
 width:100%;
-border-radius:50%;
-animation:spin 40s linear infinite;
-}
-
-@keyframes spin{
-from{transform:rotate(0)}
-to{transform:rotate(360deg)}
-}
-
-.footer{
-display:flex;
-justify-content:center;
-gap:20px;
-padding:20px;
-flex-wrap:wrap;
-}
-
-.footer a{
-padding:10px 15px;
-background:#0c223d;
-border-radius:10px;
-color:#00ffff;
-text-decoration:none;
-box-shadow:0 0 10px #00ffff;
+padding:6px;
+margin-bottom:6px;
+border-radius:6px;
+border:none;
 }
 
 @media(max-width:1000px){
@@ -90,7 +79,6 @@ grid-template-columns:1fr;
 }
 
 </style>
-
 </head>
 
 <body>
@@ -99,11 +87,13 @@ grid-template-columns:1fr;
 
 <!-- LEFT -->
 <div class="card">
-<div class="title">🎵 Music</div>
 
-<iframe src="https://www.youtube.com/embed/qDQi31U9qrE"></iframe>
-<iframe src="https://www.youtube.com/embed/EMb_IyLEQtw"></iframe>
-<iframe src="https://www.youtube.com/embed/pRpeEdMmmQ0"></iframe>
+<div class="title">🎵 Music Player</div>
+
+<input id="musicUrl" placeholder="Dán link YouTube embed...">
+<button onclick="playMusic()">Play</button>
+
+<iframe id="player" style="width:100%;height:180px;border:none;margin-top:10px"></iframe>
 
 </div>
 
@@ -111,39 +101,27 @@ grid-template-columns:1fr;
 <div>
 
 <div class="card">
-<div class="title">🕒 Giờ Việt Nam</div>
+<div class="title">🕒 Giờ VN</div>
 <div id="clock" class="clock"></div>
 </div>
 
 <div class="card">
-<div class="title">🌍 Giờ Quốc Tế</div>
-Tokyo: <span id="tokyo"></span><br>
-New York: <span id="newyork"></span><br>
-London: <span id="london"></span>
-</div>
-
-<div class="card">
-<div class="title">🌤 Weather HCM</div>
+<div class="title">🌤 Weather</div>
 <div id="weather">Loading...</div>
 </div>
 
 <div class="card crypto">
-<div class="title">₿ Crypto Market</div>
-<div>BTC <span id="btc">...</span></div>
-<div>ETH <span id="eth">...</span></div>
-<div>BNB <span id="bnb">...</span></div>
-<div>OKB <span id="okb">...</span></div>
-<div>SUI <span id="sui">...</span></div>
+<div class="title">₿ Crypto (click để lưu)</div>
+<div onclick="saveCoin('BTC')">BTC <span id="btc"></span></div>
+<div onclick="saveCoin('ETH')">ETH <span id="eth"></span></div>
+<div onclick="saveCoin('BNB')">BNB <span id="bnb"></span></div>
+<div onclick="saveCoin('OKB')">OKB <span id="okb"></span></div>
+<div onclick="saveCoin('SUI')">SUI <span id="sui"></span></div>
 </div>
 
 <div class="card">
-<div class="title">📊 BTC Chart</div>
-<iframe src="https://s.tradingview.com/widgetembed/?symbol=BINANCE:BTCUSDT&interval=60&theme=dark"></iframe>
-</div>
-
-<div class="card">
-<div class="title">📅 Today</div>
-<div id="date"></div>
+<div class="title">⭐ Coin yêu thích</div>
+<div id="fav"></div>
 </div>
 
 </div>
@@ -152,111 +130,88 @@ London: <span id="london"></span>
 <div>
 
 <div class="card">
-<div class="title">🌍 Earth</div>
-<img class="earth"
-src="https://upload.wikimedia.org/wikipedia/commons/9/97/The_Earth_seen_from_Apollo_17.jpg">
+<div class="title">⚙️ Settings</div>
+<button onclick="toggleTheme()">Đổi Dark/Light</button>
 </div>
 
 <div class="card">
 <div class="title">📰 Crypto News</div>
-<ul id="cryptonews"></ul>
+<ul id="news"></ul>
 </div>
 
 </div>
-
-</div>
-
-<div class="footer">
-
-<a href="https://github.com/kimkha1985" target="_blank">GitHub</a>
-<a href="https://x.com/ChauKimKha" target="_blank">X</a>
 
 </div>
 
 <script>
 
-window.onload=function(){
-
-// CLOCK VN
-function clock(){
+// CLOCK
+setInterval(()=>{
 document.getElementById("clock").innerHTML =
 new Date().toLocaleTimeString("vi-VN");
+},1000);
+
+// MUSIC
+function playMusic(){
+let url=document.getElementById("musicUrl").value;
+document.getElementById("player").src=url;
 }
-setInterval(clock,1000);
-clock();
-
-// WORLD TIME
-function world(){
-document.getElementById("tokyo").innerHTML =
-new Date().toLocaleTimeString("vi-VN",{timeZone:"Asia/Tokyo"});
-
-document.getElementById("newyork").innerHTML =
-new Date().toLocaleTimeString("vi-VN",{timeZone:"America/New_York"});
-
-document.getElementById("london").innerHTML =
-new Date().toLocaleTimeString("vi-VN",{timeZone:"Europe/London"});
-}
-setInterval(world,1000);
-world();
-
-// DATE
-document.getElementById("date").innerHTML =
-new Date().toLocaleDateString("vi-VN");
 
 // CRYPTO
-async function crypto(){
-try{
-let res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,binancecoin,okb,sui&vs_currencies=usd");
-let data = await res.json();
+async function loadCrypto(){
+let res=await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,binancecoin,okb,sui&vs_currencies=usd");
+let d=await res.json();
 
-document.getElementById("btc").innerHTML = data.bitcoin.usd + " $";
-document.getElementById("eth").innerHTML = data.ethereum.usd + " $";
-document.getElementById("bnb").innerHTML = data.binancecoin.usd + " $";
-document.getElementById("okb").innerHTML = data.okb.usd + " $";
-document.getElementById("sui").innerHTML = data.sui.usd + " $";
-
-}catch(e){
-console.log("Crypto lỗi", e);
+btc.innerHTML=d.bitcoin.usd;
+eth.innerHTML=d.ethereum.usd;
+bnb.innerHTML=d.binancecoin.usd;
+okb.innerHTML=d.okb.usd;
+sui.innerHTML=d.sui.usd;
 }
-}
-crypto();
-setInterval(crypto,30000);
+loadCrypto();
+setInterval(loadCrypto,30000);
 
-// WEATHER (HCM)
+// WEATHER
 async function weather(){
-try{
-let res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=10.82&longitude=106.63&current_weather=true");
-let data = await res.json();
+let r=await fetch("https://api.open-meteo.com/v1/forecast?latitude=10.82&longitude=106.63&current_weather=true");
+let d=await r.json();
 
-document.getElementById("weather").innerHTML =
-data.current_weather.temperature + "°C | Gió " +
-data.current_weather.windspeed + " km/h";
-
-}catch(e){
-document.getElementById("weather").innerHTML="Không load được";
-}
+weather.innerHTML = d.current_weather.temperature+"°C";
 }
 weather();
 
-// CRYPTO NEWS
+// NEWS
 async function news(){
-try{
-let res = await fetch("https://api.rss2json.com/v1/api.json?rss_url=https://cointelegraph.com/rss");
-let data = await res.json();
+let r=await fetch("https://api.rss2json.com/v1/api.json?rss_url=https://cointelegraph.com/rss");
+let d=await r.json();
 
 let html="";
-data.items.slice(0,5).forEach(n=>{
-html+=`<li><a href="${n.link}" target="_blank" style="color:#00ffff">${n.title}</a></li>`;
+d.items.slice(0,5).forEach(n=>{
+html+=`<li><a href="${n.link}" target="_blank">${n.title}</a></li>`;
 });
-
-document.getElementById("cryptonews").innerHTML = html;
-
-}catch(e){
-console.log("News lỗi",e);
-}
+news.innerHTML=html;
 }
 news();
 
+// SAVE COIN
+function saveCoin(c){
+let fav=JSON.parse(localStorage.getItem("fav")||"[]");
+if(!fav.includes(c)){
+fav.push(c);
+localStorage.setItem("fav",JSON.stringify(fav));
+showFav();
+}
+}
+
+function showFav(){
+let fav=JSON.parse(localStorage.getItem("fav")||"[]");
+document.getElementById("fav").innerHTML=fav.join(", ");
+}
+showFav();
+
+// THEME
+function toggleTheme(){
+document.body.classList.toggle("light");
 }
 
 </script>
