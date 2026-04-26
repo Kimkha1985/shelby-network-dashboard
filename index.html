@@ -3,46 +3,107 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Lua Ve Nha PRO MAX AI</title
+<title>Lua Ve Nha FINAL APP</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#06192f;
+color:white;
+}
+
 .container{
+display:grid;
+grid-template-columns:250px 1fr 300px;
+gap:12px;
+padding:12px;
+}
 
+.card{
+background:#0c223d;
+padding:10px;
+border-radius:10px;
+box-shadow:0 0 10px #00eaff;
+}
 
+.title{
+color:#00eaff;
+margin-bottom:6px;
+}
 
+input,button{
+padding:6px;
+margin:4px 0;
+border-radius:6px;
+border:none;
+}
 
+button{
+background:#00eaff;
+cursor:pointer;
+}
+
+.chat{
+height:200px;
+overflow:auto;
+background:#000;
+padding:5px;
+border-radius:6px;
+}
+
+@media(max-width:1000px){
+.container{grid-template-columns:1fr;}
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- LEFT -->
+<div>
 
 <div class="card">
 <div class="title">🎵 Music</div>
-<input id="music" placeholder="YouTube embed link">
+<input id="music">
 <button onclick="play()">Play</button>
-<iframe id="player" style="width:100%;height:150px;border:none"></iframe>
+<iframe id="player" style="width:100%;height:140px;border:none"></iframe>
 </div>
 
+</div>
 
+<!-- CENTER -->
+<div>
 
+<div class="card">
+<div class="title">🕒 Clock</div>
+<div id="clock"></div>
+</div>
 
-
-
-
-
-
-
-
+<div class="card">
+<div class="title">💰 Portfolio</div>
 
 <input id="coin" placeholder="BTC">
 <input id="amount" placeholder="Số lượng">
-<input id="price" placeholder="Giá mua">
+<input id="buy" placeholder="Giá mua">
 
-<button onclick="add()">Add</button
+<button onclick="add()">Add</button>
+
+<div id="list"></div>
 
 </div>
 
 <div class="card">
-<div class="title"
+<div class="title">🔔 Alert</div>
 
-<input id="alertCoin" placeholder="BTC">
-<input id="alertPrice" 
+<input id="aCoin" placeholder="BTC">
+<input id="aPrice" placeholder="Giá target">
 
-<button onclick="setAlert()">Set Alert</button>
+<button onclick="setAlert()">Set</button>
 
 <div id="alerts"></div>
 
@@ -54,11 +115,13 @@
 <div>
 
 <div class="card">
+<div class="title">🤖 AI (gắn API key)</div>
 
+<input id="apikey" placeholder="OpenAI API key">
 
 <div id="chat" class="chat"></div>
 
-<input id="msg" placeholder="Nhập câu hỏi...">
+<input id="msg">
 <button onclick="send()">Send</button>
 
 </div>
@@ -76,63 +139,103 @@ clock.innerHTML=new Date().toLocaleTimeString("vi-VN")
 
 // MUSIC
 function play(){
-player.src=document.getElementById("music").value
+player.src=music.value
 }
 
-// THEME
-function toggleTheme(){
-document.body.classList.toggle("light")
+// GET PRICE BINANCE
+async function price(symbol){
+let r=await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${symbol}USDT`)
+let d=await r.json()
+return parseFloat(d.price)
 }
 
 // PORTFOLIO
-function add(){
-let coin=document.getElementById("coin").value
-let amount=document.getElementById("amount").value
-let price=document.getElementById("price").value
-
+async function show(){
 let list=JSON.parse(localStorage.getItem("pf")||"[]")
-list.push({coin,amount,price})
+let html=""
+
+for(let i of list){
+let p=await price(i.coin)
+let pnl=((p - i.buy) * i.amount).toFixed(2)
+
+html+=`${i.coin} | ${i.amount} | Buy:${i.buy} | Now:${p} | PNL:${pnl}<br>`
+}
+
+listDiv.innerHTML=html
+}
+
+function add(){
+let list=JSON.parse(localStorage.getItem("pf")||"[]")
+
+list.push({
+coin:coin.value.toUpperCase(),
+amount:parseFloat(amount.value),
+buy:parseFloat(buy.value)
+})
+
 localStorage.setItem("pf",JSON.stringify(list))
 show()
 }
 
-function show(){
-let list=JSON.parse(localStorage.getItem("pf")||"[]")
-let html=""
-list.forEach(i=>{
-html+=`${i.coin} | ${i.amount} | ${i.price}<br>`
-})
-document.getElementById("list").innerHTML=html
-}
+let listDiv=document.getElementById("list")
 show()
+setInterval(show,15000)
 
 // ALERT
 function setAlert(){
-let coin=alertCoin.value
-let price=alertPrice.
-
-function showAlert(){
 let a=JSON.parse(localStorage.getItem("alert")||"[]")
-let html=""
-a.forEach(i=>{
-html+=`${i.coin} → ${i.price}<br>`
-})
-alerts.innerHTML=html
-}
-showAlert()
 
-// AI CHAT (FAKE)
-function send(){
+a.push({
+coin:aCoin.value.toUpperCase(),
+price:parseFloat(aPrice.value)
+})
+
+localStorage.setItem("alert",JSON.stringify(a))
+renderAlert()
+}
+
+function renderAlert(){
+let a=JSON.parse(localStorage.getItem("alert")||"[]")
+alerts.innerHTML=a.map(i=>`${i.coin} → ${i.price}`).join("<br>")
+}
+renderAlert()
+
+// CHECK ALERT REAL
+setInterval(async ()=>{
+let a=JSON.parse(localStorage.getItem("alert")||"[]")
+
+for(let i of a){
+let p=await price(i.coin)
+
+if(p >= i.price){
+alert(`${i.coin} đạt ${p}`)
+}
+}
+},10000)
+
+// AI REAL
+async function send(){
+let key=document.getElementById("apikey").value
 let msg=document.getElementById("msg").value
 
-chat.innerHTML+=`<div class="msg user">You: ${msg}</div>`
+chat.innerHTML+=`<div>You: ${msg}</div>`
 
-let reply="AI: ";
-if(msg.includes("btc")) reply+="BTC đang biến động mạnh 📈";
-else if(msg.includes("hello")) reply+="Xin chào 😄";
-else reply+="Mình đang học thêm 🤖";
+let res=await fetch("https://api.openai.com/v1/chat/completions",{
+method:"POST",
+headers:{
+"Content-Type":"application/json",
+"Authorization":"Bearer "+key
+},
+body:JSON.stringify({
+model:"gpt-4o-mini",
+messages:[{role:"user",content:msg}]
+})
+})
 
-chat.innerHTML+=`<div class="msg ai">${reply}</div>`
+let data=await res.json()
+let reply=data.choices[0].message.content
+
+chat.innerHTML+=`<div>AI: ${reply}</div>`
 chat.scrollTop=chat.scrollHeight
 }
 
